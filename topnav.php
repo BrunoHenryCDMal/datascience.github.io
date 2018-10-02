@@ -1,0 +1,1 @@
+<a href="/index.html">Home</a><a href="/game">Games</a>;

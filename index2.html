@@ -1,0 +1,2786 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<!-- The HTML <head> element has nothing to do with HTML headings.
+The <head> element is a container for metadata. HTML metadata is 
+data about the HTML document. Metadata is not displayed.
+The <head> element is placed between the <html> tag and the <body> tag:-->
+<head>
+  <title>W3 course on HTML</title>
+  <meta charset="UTF-8">
+  
+<link rel="stylesheet" href="styles.css">  
+<!-- <style>
+body {background-color: #79797A;}
+h1   {color: black;}
+p    {color: black;}
+</style> -->
+
+<meta charset="UTF-8">
+<meta name="description" content="Web tutorial">
+<meta name="keywords" content="HTML,CSS,XML,JavaScript">
+<meta name="author" content="Bruno Henriques">
+<meta http-equiv="refresh" content="30">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- <base href="https://www.w3schools.com/images/" target="_blank"> -->
+
+<!--
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Style the header */
+header {
+    background-color: #666;
+    padding: 30px;
+    text-align: center;
+    font-size: 35px;
+    color: white;
+}
+
+/* Create two columns/boxes that floats next to each other */
+nav {
+    float: left;
+    width: 30%;
+    height: 300px; /* only for demonstration, should be removed */
+    background: #ccc;
+    padding: 20px;
+}
+
+/* Style the list inside the menu */
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+article {
+    float: left;
+    padding: 20px;
+    width: 70%;
+    background-color: #f1f1f1;
+    height: 300px; /* only for demonstration, should be removed */
+}
+
+/* Clear floats after the columns */
+section:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Style the footer */
+footer {
+    background-color: #777;
+    padding: 10px;
+    text-align: center;
+    color: white;
+}
+
+/* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
+@media (max-width: 600px) {
+    nav, article {
+        width: 100%;
+        height: auto;
+    }
+}
+</style>
+-->
+
+</head>
+
+<body>
+
+<h1>This is heading 1</h1>
+<h2>This is heading 2</h2>
+<h3>This is heading 3</h3>
+
+<br>
+
+<p>My first paragraph.</p>
+
+<br>
+
+<p>link:</p>
+<a href="https://www.w3schools.com">www.w3schools.com</a>
+
+<br>
+<br>
+<br>
+
+<p>
+HTML images are defined with the "img" tag.
+The source file (src), alternative text (alt), width, and height are provided as attributes:
+</p>
+
+<img src="w3schools.jpg" alt="image" width="104" height="142">
+
+<br>
+<br>
+<br>
+
+<p>button</p>
+<button>Click me</button>
+
+<br>
+<br>
+<br>
+
+<p>HTML lists are defined with the "ul" (unordered/bullet list) 
+or the "ol" (ordered/numbered list) tag, followed by "li" tags (list items):</p>
+
+<ul>
+  <li>Coffee</li>
+  <li>Tea</li>
+  <li>Milk</li>
+</ul>
+
+<br>
+<br>
+<br>
+
+<h3>HTML Attributes:</h3>
+<h4>We Suggest: Quote Attribute Values</h4>
+<p>
+All HTML elements can have attributes<br>
+Attributes provide additional information about an element<br>
+Attributes are always specified in the start tag<br>
+Attributes usually come in name/value pairs like: name="value"</p>
+
+<p>The href Attribute for links: <a href="https://www.w3schools.com">This is a link</a></p>
+<p>The src, width, height and alt Attributes for images: <img src="img_girl.jpg" width="500" height="600" alt="Girl with a jacket"></p>
+<br>
+<p>The style attribute is used to specify the styling of an element, like color, font, size etc:</p>
+<p style="color:red">I am a paragraph</p>
+
+<p>The language of the document can be declared in the <html> tag.
+The language is declared with the lang attribute.</p>
+
+<br>
+<p>The title Attribute:</p>
+<p>A title attribute is added to the "p" element. The value of the title attribute will be 
+displayed as a tooltip when you mouse over the paragraph:</p>
+<p title="I'm a tooltip">
+This is a paragraph.</p>
+
+<p>In some situations, when the attribute value itself contains double quotes, it is necessary to use single quotes:</p>
+
+<p title='John "ShotGun" Nelson'> paragraph</p>
+
+
+<hr>
+
+<p>Headings are defined with the 'h1' to 'h6' tags. Search engines use the headings to index the structure and content of your web pages.</p>
+<h6>Heading 6</h6>
+
+<p>Each HTML heading has a default size. However, you can specify the size for any heading with the style attribute, using the CSS font-size property:</p>
+<h1 style="font-size:60px;">Heading 1</h1>
+
+<h3>HTML Horizontal Rules</h3>
+<p>The 'hr' tag defines a thematic break in an HTML page, and is most often displayed as a horizontal rule.</p>
+
+
+<hr>
+
+<h3> 8 - The HTML 'pre' Element </h3>
+<pre>
+  My Bonnie lies over the ocean.
+
+  My Bonnie lies over the sea.
+
+  My Bonnie lies over the ocean.
+
+  Oh, bring back my Bonnie to me.
+</pre>
+
+
+<hr>
+<h3> 9 - HTML Styles </h3>
+<p>Setting the style of an HTML element, can be done with the style attribute.
+'tagname style="property:value;"' The property is a CSS property. The value is a CSS value.</p>
+
+<h4>Color</h4>
+<p style="color:blue;">The color property defines the text color for an HTML element:</p>
+
+<h4>Fonts</h4>
+<p style="font-family:verdana;">The font-family property defines the font to be used for an HTML element:</p>
+
+<h4>Text Size</h4>
+<p style="font-size:160%;">This is a paragraph.</p>
+
+<h4>Text Alignment</h4>
+<p style="text-align:left;">Centered paragraph.</p>
+
+
+<hr>
+<h3> 10 - HTML Formatting</h3>
+<p>HTML also defines special elements for defining text with a special meaning. 
+Browsers display 'strong' as 'b', and 'em' as 'i'. However, there is a difference 
+in the meaning of these tags: 'b' and 'i' defines bold and italic text, but 
+'strong' and 'em' means that the text is "important".</p>
+<b>This text is bold</b>
+<strong>This text is strong</strong>
+<i>This text is italic</i>
+<em>This text is emphasized</em>
+<h2>HTML <small>Small</small> Formatting</h2>
+<h2>HTML <mark>Marked</mark> Formatting</h2>
+<p>My favorite color is <del>blue</del> red.</p>
+<p>My favorite <ins>color</ins> is red.</p>
+<p>This is <sub>subscripted</sub> text.</p>
+<p>This is <sup>superscripted</sup> text.</p>
+
+
+<hr>
+<h3> 11 - HTML Quotations</h3>
+<p>The HTML 'q' element defines a short quotation.</p>
+<p>WWF's goal is to: <q>Build a future where people live in harmony with nature.</q></p>
+
+<p>The HTML 'blockquote' element defines a section that is quoted from another source.</p>
+<p>Here is a quote from WWF's website:</p>
+<blockquote cite="http://www.worldwildlife.org/who/index.html">
+For 50 years, WWF has been protecting the future of nature.
+The world's leading conservation organization,
+WWF works in 100 countries and is supported by
+1.2 million members in the United States and
+close to 5 million globally.
+</blockquote>
+<p>The HTML 'abbr' element defines an abbreviation or an acronym.</p>
+<p>The <abbr title="World Health Organization">WHO</abbr> was founded in 1948.</p>
+
+<p>The HTML 'address' element defines contact information (author/owner) of a document or an article.</p>
+<address>
+Written by John Doe.<br> 
+Visit us at:<br>
+Example.com<br>
+Box 564, Disneyland<br>
+USA
+</address>
+
+<p>The HTML 'cite' element defines the title of a work.</p>
+<p><cite>The Scream</cite> by Edvard Munch. Painted in 1893.</p>
+
+<p>The HTML 'bdo' element defines bi-directional override.</p>
+<bdo dir="rtl">This text will be written from right to left</bdo>
+
+
+
+<hr>
+<h3> 12 - HTML Comments</h3>
+<!-- Write your comments here -->
+
+
+<hr>
+<h3> 13 - HTML Colors</h3>
+<h5 class="small" style="background-color:DodgerBlue;">Hello World</h5>
+<p style="background-color:Tomato;">Lorem ipsum...</p>
+
+<h5 style="color:Tomato;">Hello World</h5>
+<p style="color:DodgerBlue;">Lorem ipsum...</p>
+
+<h5 style="border:2px solid Tomato;">Hello World</h5>
+<h5 style="border:2px solid DodgerBlue;">Hello World</h5>
+
+<h5 style="background-color:rgb(255, 99, 71);">...</h5>
+<h5 style="background-color:#ff6347;">...</h5>
+<h5 style="background-color:hsl(9, 100%, 64%);">...</h5>
+
+<h5 style="background-color:rgba(255, 99, 71, 0.5);">...</h5>
+<h5 style="background-color:hsla(9, 100%, 64%, 0.5);">...</h5>
+
+<p>HSLA color values are an extension of HSL color values with an alpha channel - which specifies the opacity for a color.
+
+An HSLA color value is specified with:
+
+hsla(hue, saturation, lightness, alpha), hsla(9, 100%, 64%, 0.2)</p>
+
+<hr>
+<h3> 14 - HTML CSS</h3>
+<p>CSS stands for Cascading Style Sheets.</p> 
+<p>CSS describes how HTML elements are to be displayed on screen, paper, or in other media.
+CSS saves a lot of work. It can control the layout of multiple web pages all at once.
+CSS can be added to HTML elements in 3 ways:
+<br>
+Inline - by using the style attribute in HTML elements
+<br>
+Internal - by using a 'style' element in the 'head' section
+<br>
+External - by using an external CSS file
+<br>
+The most common way to add CSS, is to keep the styles in separate 
+CSS files. However, here we will use inline and internal styling, 
+because this is easier to demonstrate, and easier for you to try it yourself.</p>
+
+<h4>Inline CSS</h4>
+<p>An inline CSS is used to apply a unique style to a single HTML element.
+An inline CSS uses the style attribute of an HTML element.</p>
+<h6 style="color:blue;">This is a Blue Heading</h6>
+
+<h4>Internal CSS</h4>
+<p>An internal CSS is used to define a style for a single HTML page.
+An internal CSS is defined in the 'head' section of an HTML page, within a 'style' element:</p>
+
+<h4>External CSS</h4>
+<p>An external style sheet is used to define the style for many HTML pages.
+With an external style sheet, you can change the look of an entire web site, by changing one file!
+To use an external style sheet, add a link to it in the 'head' section of the HTML page:</p>
+
+<h4>The id Attribute</h4>
+<p>To define a specific style for one special element, add an id attribute to the element:</p>
+<p id="p01">I am different</p>
+
+<h4>The class Attribute</h4>
+<p>To define a style for special types of elements, add a class attribute to the element:</p>
+<p class="error">I am different</p>
+
+
+<h4>External References</h4>
+<p>This example uses a full URL to link to a style sheet:</p>
+<!-- <link rel="stylesheet" href="https://www.w3schools.com/html/styles.css"> -->
+<p>This example links to a style sheet located in the html folder on the current web site:</p>
+<!--  <link rel="stylesheet" href="/html/styles.css"> -->
+<p>This example links to a style sheet located in the same folder as the current page:</p>
+<!-- <link rel="stylesheet" href="styles.css"> -->
+
+
+
+
+<hr>
+<h3> 15 - HTML Links</h3>
+<p>A link does not have to be text. It can be an image or any other HTML element. 
+In HTML, links are defined with the 'a' tag:</p>
+<a href="https://www.w3schools.com/html/">Visit our HTML tutorial</a>
+
+<h4>Local Links</h4>
+<p>A local link (link to the same web site) is specified with a relative URL (without http://www....).</p>
+<a href="html_images.asp">HTML Images</a>
+
+<h4>HTML Link Colors<h4>
+<p>By default, a link will appear like this (in all browsers):
+<br>
+An unvisited link is underlined and blue
+<br>
+A visited link is underlined and purple
+<br>
+An active link is underlined and red
+</p>
+
+<h4>HTML Links - The target Attribute</h4>
+
+<p>The target attribute specifies where to open the linked document:
+<br>
+_blank - Opens the linked document in a new window or tab
+<br>
+_self - Opens the linked document in the same window/tab as it was clicked (this is default)
+<br>
+_parent - Opens the linked document in the parent frame
+<br>
+_top - Opens the linked document in the full body of the window
+<br>
+framename - Opens the linked document in a named frame
+</p>
+<a href="https://www.w3schools.com/" target="_blank">Visit W3Schools!</a>
+
+<h4>Image as Link</h4>
+<a href="default.asp">
+  <img src="smiley.gif" alt="HTML tutorial" style="width:42px;height:42px;border:0;">
+</a>
+
+<p>link titles</p>
+<a href="https://www.w3schools.com/html/" title="Go to W3Schools HTML section">Visit our HTML Tutorial</a>
+
+<h4>Bookmarks</h4>
+<p>First, create a bookmark with the id attribute:</p>
+<h2 id="C4">Chapter 4</h2>
+
+<p>Then, add a link to the bookmark ("Jump to Chapter 4"), from within the same page:</p>
+<a href="#C4">Jump to Chapter 4</a>
+
+<p>Or, add a link to the bookmark ("Jump to Chapter 4"), from another page:</p>
+<a href="html_demo.html#C4">Jump to Chapter 4</a>
+
+<hr>
+<h3> 16 - HTML Images</h3>
+
+
+<h4>Image Size - Width and Height</h4>
+<img src="./img/IMG_5366.jpg" alt="Girl in a jacket" style="width:500px;height:300px;">
+<img src="./img/IMG_5366.jpg" alt="Girl in a jacket" width="500" height="300">
+<p>The width and height attributes always defines the width and height of the image in pixels.
+<br>
+<b> We suggest using the style attribute, it prevents styles sheets from changing the size of images</b></p>
+
+<img src="https://www.w3schools.com/images/w3schools_green.jpg" alt="W3Schools.com">
+
+<h4>Gifs</h4>
+<img src="programming.gif" alt="Computer Man" style="width:48px;height:48px;">
+
+<h4>Image as a link</h4>
+<a href="default.asp">
+  <img src="smiley.gif" alt="HTML tutorial" style="width:42px;height:42px;border:0;">
+</a>
+
+<br>
+<p><img src="./img/IMG_5366.jpg" alt="Smiley face" style="float:right;width:42px;height:42px;">
+The image will float to the right of the text.</p>
+
+<br>
+<p><img src="./img/IMG_5366.jpg" alt="Smiley face" style="float:left;width:42px;height:42px;">
+The image will float to the left of the text.</p>
+
+
+<h4>Image maps</h4>
+<p>The 'map' tag defines an image-map. An image-map is an image with clickable areas.</p>
+
+<img src="./img/IMG_5366.jpg" alt="Workplace" usemap="#workmap" style="width:500px;height:300px;">
+
+<map name="workmap">
+  <area shape="rect" coords="34,44,270,350" alt="Computer" href="computer.htm">
+  <area shape="rect" coords="290,172,333,250" alt="Phone" href="phone.htm">
+  <area shape="circle" coords="337,300,44" alt="Coffee" href="coffee.htm">
+</map>
+
+<h4>Background Image</h4>
+<p>To add a background image on a web page, specify the background-image property on the BODY element:</p>
+
+<!-- <body style="background-image:url('clouds.jpg')"> -->
+
+<p>To add a background image on a paragraph, specify the background-image property on the P element:</p>
+<p style="background-image:url('clouds.jpg')">
+...
+</p>
+
+h4>The 'picture' Element</h4>
+
+<p>
+HTML5 introduced the 'picture' element to add more flexibility when specifying image resources.
+The 'picture' element contains a number of 'source' elements, each referring to different image sources. 
+This way the browser can choose the image that best fits the current view and/or device.
+<br>
+Each 'source' element have attributes describing when their image is the most suitable.
+<br>
+The browser will use the first 'source' element with matching attribute values, and ignore any 
+following 'source' elements.
+</p>
+
+<picture>
+  <source media="(min-width: 650px)" srcset="img_orange_flowers.jpg">
+  <source media="(min-width: 465px)" srcset="img_orange_flowers.jpg">
+  <img src="img_orange_flowers.jpg" alt="Flowers" style="width:auto;">
+</picture>
+
+<hr>
+<h3> 17 - HTML Tables</h3>
+<p>To make a cell span more than one column, use the colspan attribute (or rowspan)</p>
+<!-- <th colspan="2">Telephone</th> -->
+<!-- <th rowspan="2">Telephone:</th> -->
+
+<hr>
+<h3> 18 - HTML Lists</h3>
+<h4>Unordered HTML List</h4>
+<ul>
+  <li>Coffee</li>
+  <li>Tea</li>
+  <li>Milk</li>
+</ul>
+
+
+
+<h4>Unordered HTML List - Choose List Item Marker</h4>
+<p>The CSS list-style-type property is used to define the style of the list item marker:
+<br>
+- disc Sets the list item marker to a bullet (default)
+<br>
+- circle	Sets the list item marker to a circle
+<br>
+- square	Sets the list item marker to a square
+<br>
+- none	The list items will not be marked
+</p>
+
+<ul style="list-style-type:circle">
+  <li>Coffee</li>
+  <li>Tea</li> 
+</ul>
+
+<ul style="list-style-type:none">
+  <li>Coffee</li>
+  <li>Tea</li> 
+</ul>
+
+<h4>Ordered HTML List</h4>
+<ol>
+  <li>Coffee</li>
+  <li>Tea</li>
+  <li>Milk</li>
+</ol>
+
+<h4>Ordered HTML List - The Type Attribute</h4>
+<p>The type attribute of the 'ol' tag, defines the type of the list item marker:</p>
+
+<ul>
+<li>type="1"	The list items will be numbered with numbers (default)</li>
+<li>type="A"	The list items will be numbered with uppercase letters</li>
+<li>type="a"	The list items will be numbered with lowercase letters</li>
+<li>type="I"	The list items will be numbered with uppercase roman numbers</li>
+<li>type="i"	The list items will be numbered with lowercase roman numbers</li>
+</ul>
+
+<ol type="A">
+  <li>Coffee</li>
+  <li>Tea</li>
+  <li>Milk</li>
+</ol>
+
+<h4>HTML Description Lists</h4>
+<p>A description list is a list of terms, with a description of each term.
+<br>
+The 'dl' tag defines the description list, the 'dt' tag defines the term (name), 
+and the 'dd' tag describes each term:<p>
+
+<dl>
+  <dt>Coffee</dt>
+  <dd>- black hot drink</dd>
+  <dt>Milk</dt>
+  <dd>- white cold drink</dd>
+</dl>
+
+<h4>Nested HTML Lists</h4>
+<ul>
+  <li>Coffee</li>
+  <li>Tea
+    <ul>
+      <li>Black tea</li>
+      <li>Green tea</li>
+    </ul>
+  </li>
+  <li>Milk</li>
+</ul>
+
+<h4>Control List Counting</h4>
+<ol start="50">
+  <li>Coffee</li>
+  <li>Tea</li>
+  <li>Milk</li>
+</ol>
+
+<h4>Horizontal List with CSS</h4>
+<p>HTML lists can be styled in many different ways with CSS.
+<b>One popular way is to style a list horizontally, to create a navigation menu:</b></p>
+<ul id="horizontal">
+  <li id="horizontal"><a href="#home">Home</a></li>
+  <li id="horizontal"><a href="#news">News</a></li>
+  <li id="horizontal"><a href="#contact">Contact</a></li>
+  <li id="horizontal"><a href="#about">About</a></li>
+</ul>
+
+
+
+<hr>
+<h3> 19 - HTML Blocks</h3>
+<p>Every HTML element has a default display value depending on what type of element it is. 
+The default display value for most elements is block or inline.</p>
+
+<h4>Block-level Elements</h4>
+<p>A block-level element always starts on a new line and takes up the full width available 
+(stretches out to the left and right as far as it can).</p>
+
+<p> 'address' 'article' 'aside' 'blockquote' 'canvas' 'dd' 'div' 'dl'
+<br>
+'dt' 'fieldset' 'figcaption' 'figure' 'footer' 'form' 'h1'-'h6' 'header'
+<br>
+'hr' 'li' 'main' 'nav' 'noscript' 'ol' 'output' 'p' 'pre' 'section'
+<br>
+'table' 'tfoot' 'ul' 'video'</p>
+
+<h4>Inline Elements</h4>
+<p>An inline element does not start on a new line and only takes up as much width as necessary:</p>
+<span>Hello</span>
+<p>
+'a' 'abbr' 'acronym' 'b' 'bdo' 'big' 'br' 'button' 'cite' 'code' 'dfn' 'em' 'i'
+<br>
+'img' 'input' 'kbd' 'label' 'map' 'object' 'q' 'samp' 'script' 'select' 'small'
+<br>
+'span' 'strong' 'sub' 'sup' 'textarea' 'time' 'tt' 'var'
+</p>
+
+<h4>The 'div' Element</h4>
+<p>The 'div' element is often used as a container for other HTML elements.
+<br>
+The 'div' element has no required attributes, but style, class and id are common.
+<br>
+<b>When used together with CSS, the 'div' element can be used to style blocks of content:</b></p>
+
+<div style="background-color:black;color:white;padding:20px;">
+  <h2>London</h2>
+  <p id="p01">London is the capital city of England. It is the most populous city in the United Kingdom, 
+  with a metropolitan area of over 13 million inhabitants.</p>
+  <p id="p01">Standing on the River Thames, London has been a major settlement for two millennia, 
+  its history going back to its founding by the Romans, who named it Londinium.</p>
+</div> 
+
+<h4>The 'span' Element</h4>
+<p>The 'span' element is often used as a container for some text, style, class and id are common attributes.
+<br>
+When used together with CSS, the 'span' element can be used to style parts of the text:</p>
+<h1>My <span style="color:red">Important</span> Heading</h1>
+
+<hr>
+<h3> 20 - HTML Classes</h3>
+<p>The class attribute specifies one or more class names for an HTML element.
+<br>
+The class name can be used by CSS and JavaScript to perform certain tasks for elements 
+with the specified class name.
+<br>
+<b>The class attribute can be used on any HTML element.</b>
+<br>
+<b>The class name is case sensitive!</b>
+<br>
+In CSS, to select elements with a specific class, write a period (.) character, followed by the name 
+of the class:</p>
+
+<style>
+.city {
+    background-color: #B7B7BB;
+    color: white;
+    padding: 10px;
+} 
+
+.main {
+    text-align: center;
+}
+</style>
+
+<h2 class="city">London</h2>
+<p>London is the capital of England.</p>
+
+<h2 class="city">Paris</h2>
+<p>Paris is the capital of France.</p>
+
+<h2 class="city">Tokyo</h2>
+<p>Tokyo is the capital of Japan.</p>
+
+<h4>class Attribute in JavaScript</h4>
+<p>JavaScript can access elements with a specified class name by using the getElementsByClassName() method:
+When a user clicks on a button, hide all elements with the class name "city":</p>
+<script>
+function myFunction() {
+  var x = document.getElementsByClassName("city");
+  for (var i = 0; i < x.length; i++) {
+    x[i].style.display = "none";
+  }
+}
+</script>
+
+<p>Click the button, to hide all elements with the class name "city", with JavaScript:</p>
+<button onclick="myFunction()">Hide elements</button>
+
+
+<h4>Multiple Classes</h4>
+<p>each class name must be separated by a space.</p>
+
+<h2 class="city main">London</h2>
+<h2 class="city">Paris</h2>
+<h2 class="city">Tokyo</h2>
+
+<h4>Same Class, Different Tag</h4>
+<p>Different tags, like <h2> and <p>, can have the same class name and thereby share the same style:</p>
+<h2 class="city">Paris</h2>
+<p class="city">Paris is the capital of France</p>
+
+
+
+<hr>
+<h3> 21 - HTML Id</h3>
+<p>The id attribute specifies a unique id for an HTML element 
+(the value must be unique within the HTML document).
+<br>
+The id value can be used by CSS and JavaScript to perform certain tasks 
+for a unique element with the specified id value.
+<br>
+In CSS, to select an element with a specific id, write a hash (#) character, 
+followed by the id of the element:</p>
+
+
+<h1 id="myHeader">My Header</h1>
+
+
+<h4>Difference Between Class and ID</h4>
+<p>An HTML element can only have one unique id that belongs to that single element, 
+while a class name can be used by multiple elements:</p>
+
+<style>
+/* Style the element with the id "myHeader" */
+#myHeader {
+    background-color: lightblue;
+    color: black;
+    padding: 40px;
+    text-align: center;
+}
+
+#myHeader2 {
+    background-color: lightblue;
+    color: black;
+    padding: 40px;
+    text-align: center;
+}
+
+/* Style all elements with the class name "city" */
+.city {
+    background-color: tomato;
+    color: white;
+    padding: 10px;
+} 
+</style>
+
+<!-- A unique element -->
+<h1 id="myHeader">My Cities</h1>
+
+<!-- Multiple similar elements -->
+<h2 class="city">London</h2>
+<p>London is the capital of England.</p>
+
+<h2 class="city">Paris</h2>
+<p>Paris is the capital of France.</p>
+
+<h2 class="city">Tokyo</h2>
+<p>Tokyo is the capital of Japan.</p>
+
+
+<h4>Using The id Attribute in JavaScript</h4>
+<p>JavaScript can access an element with a specified id by using the getElementById() method:
+<br>
+Use the id attribute to manipulate text with JavaScript:
+</p>
+
+<h1 id="myHeader2">My Cities</h1>
+
+<p>Click the button, to hide all elements with the class name "city", with JavaScript:</p>
+<button onclick="displayResult()">change display on myheader</button>
+
+
+<script>
+function displayResult() {
+    document.getElementById("myHeader2").innerHTML = "Have a nice day!";
+}
+</script>
+
+
+
+<h4>Bookmarks with ID and Links</h4>
+<p>HTML bookmarks are used to allow readers to jump to specific parts of a Web page.
+<br>
+Bookmarks can be useful if your webpage is very long.
+<br>
+To make a bookmark, you must first create the bookmark, and then add a link to it.
+<br>
+When the link is clicked, the page will scroll to the location with the bookmark.</p>
+
+<p>First, create a bookmark with the id attribute:</p>
+<h2 id="BMmyheader2">Chapter 4</h2>
+
+<p>Then, add a link to the bookmark ("Jump to Chapter 4"), from within the same page:</p>
+<a href="#myHeader2">Jump to myheader2</a>
+
+<!--<p>Or, add a link to the bookmark ("Jump to Chapter 4"), from another page:</p>
+<a href="html_demo.html#C4">Jump to Chapter 4</a> -->
+
+<hr>
+<h3> 22 - HTML Iframes</h3>
+<p>An iframe is used to display a web page within a web page.
+<br>
+height and width are specified in pixels by default, but they can also be in percent (like "80%").
+</p>
+<iframe src="http://galformod.mpa-garching.mpg.de/public/LGalaxies/index.php" height="100" width="200"></iframe>
+
+<p>Or you can use CSS to set the height and width of the iframe:</p>
+<iframe src="http://galformod.mpa-garching.mpg.de/public/LGalaxies/index.php" style="height:200px;width:400px;"></iframe>
+
+<h4>Iframe - Remove the Border</h4>
+<iframe src="http://galformod.mpa-garching.mpg.de/public/LGalaxies/index.php" 
+        style="border:none;height:200px;width:400px;"></iframe>
+<iframe src="http://galformod.mpa-garching.mpg.de/public/LGalaxies/index.php" 
+        style="border:2px solid black;height:200px;width:400px;"></iframe>
+
+
+<h4>Iframe - Target for a Link</h4>
+<p>An iframe can be used as the target frame for a link.
+<br>
+The target attribute of the link must refer to the name attribute of the iframe:</p>
+
+<iframe src="demo_iframe.htm" 
+        style="border:none;height:200px;width:400px;" name="iframe_a"></iframe>
+
+<p><a href="http://galformod.mpa-garching.mpg.de/public/LGalaxies/index.php" target="iframe_a">show iframe</a></p>
+
+
+<hr>
+<h3> 23 - HTML JavaScript</h3>
+<h2>My First JavaScript</h2>
+
+<button type="button"
+onclick="document.getElementById('demo').innerHTML = Date()">
+Click me to display Date and Time.</button>
+
+<p id="demo"></p>
+
+
+
+<h4>The HTML 'script' Tag</h4>
+<p>The 'script' tag is used to define a client-side script (JavaScript).
+<br>
+The 'script' element either contains scripting statements, or it points 
+to an external script file through the src attribute.
+<br>
+Common uses for JavaScript are image manipulation, form validation, and dynamic changes of content.
+<br>
+To select an HTML element, JavaScript very often uses the document.getElementById() method.
+<br>
+This JavaScript example writes "Hello JavaScript!" into an HTML element with id="demo":</p>
+
+<p>This example writes "Hello JavaScript!" into an HTML element with id="demo":</p>
+
+<p id="demo2"></p>
+
+<script>
+document.getElementById("demo2").innerHTML = "Hello JavaScript!";
+</script> 
+
+<h4>A Taste of JavaScript</h4>
+<p id="demo3">JavaScript can change the style of an HTML element.</p>
+
+<script>
+function myFunction2() {
+    document.getElementById("demo3").style.fontSize = "25px"; 
+    document.getElementById("demo3").style.color = "red";
+    document.getElementById("demo3").style.backgroundColor = "yellow";        
+}
+</script>
+
+<button type="button" onclick="myFunction2()">Click Me!</button>
+
+
+<script>
+function light(sw) {
+    var pic;
+    if (sw == 0) {
+        pic = "./img/lightoff.jpeg"
+    } else {
+        pic = "./img/lighton.jpeg"
+    }
+    document.getElementById('myImage').src = pic;
+}
+</script>
+
+<br>
+<br>
+<img id="myImage" src="./img/lightoff.jpeg" width="150" height="180">
+
+<p>
+<button type="button" onclick="light(1)">Light On</button>
+<button type="button" onclick="light(0)">Light Off</button>
+</p>
+
+<h4>The HTML 'noscript' Tag</h4>
+<p>The 'noscript' tag is used to provide an alternate content for users 
+that have disabled scripts in their browser or have a browser that doesn't support client-side scripts:</p>
+
+<p id="demo4"></p>
+
+<script>
+document.getElementById("demo4").innerHTML = "Hello JavaScript!";
+</script>
+
+<noscript>Sorry, your browser does not support JavaScript!</noscript>
+
+<p>A browser without support for JavaScript will show the text written inside the noscript element.</p>
+
+<hr>
+<h3> 24 - HTML File Paths</h3>
+<p></p>
+<h4></h4>
+<p>
+'img src="picture.jpg"'	picture.jpg is located in the same folder as the current page
+<br>
+'img src="images/picture.jpg"'	picture.jpg is located in the images folder in the current folder
+<br>
+'img src="/images/picture.jpg"'	picture.jpg is located in the images folder at the root of the current web
+<br>
+'img src="../picture.jpg"'	picture.jpg is located in the folder one level up from the current folder
+</p>
+
+<p><b>It is best practice to use relative file paths (if possible).</b></p>
+
+<hr>
+<h3> 25 - HTML Head</h3>
+<p>The 'head' element is a container for metadata (data about data) and is placed between 
+the 'html' tag and the 'body' tag.
+<br>
+HTML metadata is data about the HTML document. Metadata is not displayed.
+<br>
+Metadata typically define the document title, character set, styles, links, scripts, and other meta information.
+<br>
+The following tags describe metadata: 'title', 'style', 'meta', 'link', 'script', and 'base'.</p>
+
+<h4>The HTML 'title' Element</h4>
+<p>The 'title' element defines the title of the document, and is required in all HTML/XHTML documents.
+
+The 'title' element:
+<ol>
+	<li>defines a title in the browser tab</li>
+	<li>provides a title for the page when it is added to favorites</li>
+	<li>displays a title for the page in search engine results</li>
+</ol>
+</p>
+
+<h4>The 'style' element is used to define style information for a single HTML page:</h4>
+
+<h4>The 'link' element is used to link to external style sheets:</h4>
+<p>'link rel="stylesheet" href="mystyle.css"''</p>
+
+<h4>The HTML 'meta' Element</h4>
+<p>The 'meta' element is used to specify which character set is used, 
+page description, keywords, author, and other metadata.
+<br>
+Metadata is used by browsers (how to display content), by search engines (keywords), and other web services.
+</p>
+
+
+<h4>Setting The Viewport</h4>
+<p>HTML5 introduced a method to let web designers take control over the viewport, 
+through the 'meta' tag.
+<br>
+The viewport is the user's visible area of a web page. It varies with the device, 
+and will be smaller on a mobile phone than on a computer screen.
+<br>
+A 'meta' viewport element gives the browser instructions on how to control the 
+page's dimensions and scaling.
+<br>
+The width=device-width part sets the width of the page to follow the screen-width 
+of the device (which will vary depending on the device).
+<br>
+The initial-scale=1.0 part sets the initial zoom level when the page is first loaded by the browser.
+</p>
+
+
+<h4>The HTML 'script' Element</h4>
+<p>The 'script' element is used to define client-side JavaScripts.</p>
+
+<h4>The HTML 'base' Element</h4>
+<p>The 'base' element specifies the base URL and base target for all relative URLs in a page:</p>
+<h4></h4>
+<p></p>
+
+
+<hr>
+<h3> 26 - HTML Layout</h3>
+<p>There are four different ways to create multicolumn layouts. Each way has its pros and cons:
+	<ol>
+		<li>HTML tables (not recommended)</li>
+		<li>CSS float property</li>
+		<li>CSS flexbox</li>
+		<li>CSS framework</li>
+	</ol>
+</p>
+
+<h4>CSS Frameworks</h4>
+<p>If you want to create your layout fast, you can use a framework, like W3.CSS or Bootstrap.</p>
+
+<h4>CSS Floats</h4>
+<p>It is common to do entire web layouts using the CSS float property. 
+Float is easy to learn - you just need to remember how the float and clear properties work. 
+Disadvantages: Floating elements are tied to the document flow, which may harm the flexibility.</p>
+
+<h2>CSS Layout Float</h2>
+<p>In this example, we have created a header, two columns/boxes and a footer. On smaller screens, the columns will stack on top of each other.</p>
+<p>Resize the browser window to see the responsive effect (you will learn more about this in our next chapter - HTML Responsive.)</p>
+
+<header>
+  <h3>Cities</h3>
+</header>
+
+<section>
+  <nav>
+    <ul>
+      <li><a href="#">London</a></li>
+      <li><a href="#">Paris</a></li>
+      <li><a href="#">Tokyo</a></li>
+    </ul>
+  </nav>
+  
+  <article>
+    <h3>London</h3>
+    <p>London is the capital city of England. It is the most populous city in the  United Kingdom, with a metropolitan area of over 13 million inhabitants.</p>
+    <p>Standing on the River Thames, London has been a major settlement for two millennia, its history going back to its founding by the Romans, who named it Londinium.</p>
+  </article>
+  
+</section>
+
+<footer>
+  <p>Footer</p>
+</footer>
+
+<h4>CSS Flexbox</h4>
+<p>Flexbox is a new layout mode in CSS3.
+<br>
+Use of flexbox ensures that elements behave predictably when the page layout 
+must accommodate different screen sizes and different display devices. 
+Disadvantages: Does not work in IE10 and earlier.</p>
+
+<!-- 
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Style the header */
+header {
+    background-color: #666;
+    padding: 30px;
+    text-align: center;
+    font-size: 35px;
+    color: white;
+}
+
+/* Container for flexboxes */
+section {
+    display: -webkit-flex;
+    display: flex;
+}
+
+/* Style the navigation menu */
+nav {
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    background: #ccc;
+    padding: 20px;
+}
+
+/* Style the list inside the menu */
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Style the content */
+article {
+    -webkit-flex: 3;
+    -ms-flex: 3;
+    flex: 3;
+    background-color: #f1f1f1;
+    padding: 10px;
+}
+
+/* Style the footer */
+footer {
+    background-color: #777;
+    padding: 10px;
+    text-align: center;
+    color: white;
+}
+
+/* Responsive layout - makes the menu and the content (inside the section) sit on top of each other instead of next to each other */
+@media (max-width: 600px) {
+    section {
+      -webkit-flex-direction: column;
+      flex-direction: column;
+    }
+}
+</style>
+</head>
+<body>
+
+<h2>CSS Layout Flexbox</h2>
+<p>In this example, we have created a header, two columns/boxes and a footer. On smaller screens, the columns will stack on top of each other.</p>
+<p>Resize the browser window to see the responsive effect.</p>
+<p><strong>Note:</strong> Flexbox is not supported in Internet Explorer 10 eand earlier versions.</p>
+
+<header>
+  <h2>Cities</h2>
+</header>
+
+<section>
+  <nav>
+    <ul>
+      <li><a href="#">London</a></li>
+      <li><a href="#">Paris</a></li>
+      <li><a href="#">Tokyo</a></li>
+    </ul>
+  </nav>
+  
+  <article>
+    <h1>London</h1>
+    <p>London is the capital city of England. It is the most populous city in the  United Kingdom, with a metropolitan area of over 13 million inhabitants.</p>
+    <p>Standing on the River Thames, London has been a major settlement for two millennia, its history going back to its founding by the Romans, who named it Londinium.</p>
+  </article>
+</section>
+
+<footer>
+  <p>Footer</p>
+</footer>
+-->
+
+<hr>
+<h3> 27 - HTML Responsive</h3>
+<p>Responsive Web Design is about using HTML and CSS to automatically resize, hide, shrink, 
+or enlarge, a website, to make it look good on all devices (desktops, tablets, and phones)</p>
+
+
+<h4>Responsive Images</h4>
+<p>If the CSS width property is set to 100%, the image will be responsive and scale up and down:</p>
+
+<h4>Using the max-width Property</h4>
+<p>If the max-width property is set to 100%, the image will scale down if it has to, but never scale up to be larger than its original size:</p>
+<img src="./img/IMG_0265.jpg" style="max-width:50%;height:auto;">
+
+<h4>Show Different Images Depending on Browser Width</h4>
+<p>The HTML 'picture' element allows you to define different images for different browser window sizes.</p>
+
+<!-- 
+<picture>
+  <source srcset="./img/IMG_0265.jpg" media="(max-width: 600px)">
+  <source srcset="./img/IMG_0265.jpg" media="(max-width: 1500px)">
+  <source srcset="./img/IMG_5366.jpg">
+  <img src="./img/IMG_0265.jpg" alt="Flowers">
+</picture>
+-->
+
+<h4>Responsive Text Size</h4>
+<p>The text size can be set with a "vw" unit, which means the "viewport width".
+That way the text size will follow the size of the browser window.
+<br>
+Viewport is the browser window size. 1vw = 1% of viewport width. If the viewport is 50cm wide, 1vw is 0.5cm.
+</p>
+
+<p style="font-size:2vw"> Example</p>
+
+<h4>Media Queries</h4>
+<p>In addition to resize text and images, it is also common to use media queries in responsive web pages.
+<br>
+With media queries you can define completely different styles for different browser sizes.
+<br>
+Example: resize the browser window to see that the three div elements below will display 
+horizontally on large screens and stacked vertically on small screens:</p>
+
+<h4>Responsive Web Design - Frameworks</h4>
+<p>A great way to create a responsive design, is to use a responsive CSS style sheet</p>
+
+
+<h4>Bootstrap</h4>
+
+
+<hr>
+<h3> 28 - HTML Computercode</h3>
+
+<h4>HTML 'code' For Computer Code</h4>
+<code>
+x = 5;<br>
+y = 6;<br>
+z = x + y;
+</code>
+
+<pre>
+<code>
+x = 5;
+y = 6;
+z = x + y;
+</code>
+</pre>
+
+<h4>HTML <kbd> For Keyboard Input</h4>
+<p>The HTML 'kbd' element represents user input, like keyboard input or voice commands.</p>
+
+<p>Save the document by pressing <kbd>Ctrl + S</kbd></p>
+
+<h4>HTML <samp> For Program Output</h4>
+<p>The HTML 'samp' element represents output from a program or computing system.</p>
+<p>If you input wrong value, the program will return <samp>Error!</samp></p>
+
+<h4>HTML 'var' For Variables</h4>
+<p>Einstein wrote: <var>E</var> = <var>mc</var><sup>2</sup>.</p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+<h3> 29 - HTML Entities</h3>
+<p>Reserved characters in HTML must be replaced with character entities.
+<br>
+Characters that are not present on your keyboard can also be replaced by entities.
+</p>
+
+<p>Some characters are reserved in HTML.
+If you use the less than (&lt;) or greater than (&gt;) signs in your text, the browser might mix them with tags.
+Character entities are used to display reserved characters in HTML.
+A character entity looks like this:</p>
+
+<!--
+&entity_name;
+OR
+
+&#entity_number; -->
+
+<h4>Non-breaking Space</h4>
+<p>A common character entity used in HTML is the non-breaking space: &nbsp;
+</p>
+
+<p>The non-breaking hyphen (&#8209;) lets you use a hyphen character (‑) that won't break.</p>
+
+<p>
+	<ul>
+		<li>non-breaking space	&nbsp;	&#160;</li>
+		<li>less than	&lt;	&#60;</li>
+		<li>greater than	&gt;	&#62;</li>
+		<li>ampersand	&amp;	&#38;</li>
+		<li>double quotation mark	&quot;	&#34;</li>
+		<li>single quotation mark (apostrophe)	&apos;	&#39;</li>
+		<li>cent	&cent;	&#162;</li>
+		<li>pound	&pound;	&#163;</li>
+		<li>yen	&yen;	&#165;</li>
+		<li>euro	&euro;	&#8364;</li>
+		<li>copyright	&copy;	&#169;</li>
+		<li>registered trademark	&reg;</li>	
+	</ul>
+</p>
+
+
+<h4>Diacritical Marks (acentos)</h4>
+<p>
+	<ul>
+		<li>a&#768;	à</li>	
+		<li>a&#769;	á</li>	
+		<li>a&#770;	â</li>	
+		<li>a&#771;	ã</li>	
+		<li>O&#768;	Ò</li>	
+		<li>O&#769;	Ó</li>	
+		<li>O&#770;	Ô</li>	
+		<li>O&#771;	Õ</li>	
+	</ul>
+</p>
+
+<hr>
+<h3> 30 - HTML Symbols</h3>
+<p>HTML entities were described in the previous chapter.
+<br>
+Many mathematical, technical, and currency symbols, are not present on a normal keyboard.
+<br>
+To add such symbols to an HTML page, you can use an HTML entity name.</p>
+<p>I will display &euro;</p>
+<p>I will display &#8364;</p>
+<p>I will display &#x20AC;</p>
+
+<p>
+	<ul>
+		<li>&#8704;	&forall;	FOR ALL</li>	
+		<li>&#8706;	&part;	PARTIAL DIFFERENTIAL</li>	
+		<li>&#8707;	&exist;	THERE EXISTS</li>	
+		<li>&#8709;	&empty;	EMPTY SETS</li>	
+		<li>&#8711;	&nabla;	NABLA</li>	
+		<li>&#8712;	&isin;	ELEMENT OF</li>	
+		<li>&#8713;	&notin;	NOT AN ELEMENT OF</li>	
+		<li>&#8715;	&ni;	CONTAINS AS MEMBER</li>	
+		<li>&#8719;	&prod;	N-ARY PRODUCT</li>	
+		<li>&#8721;	&sum;	N-ARY SUMMATION</li>	
+	</ul>
+</p>
+
+<p>
+	<ul>
+		<li>&#913;	&Alpha;	GREEK CAPITAL LETTER ALPHA</li>	
+		<li>&#914;	&Beta;	GREEK CAPITAL LETTER BETA</li>	
+		<li>&#915;	&Gamma;	GREEK CAPITAL LETTER GAMMA</li>	
+		<li>&#916;	&Delta;	GREEK CAPITAL LETTER DELTA</li>	
+		<li>&#917;	&Epsilon;	GREEK CAPITAL LETTER EPSILON</li>	
+		<li>&#918;	&Zeta;	GREEK CAPITAL LETTER ZETA</li>	
+	</ul>
+</p>
+
+
+<hr>
+<h3> 31 - HTML Charset</h3>
+<p>To display an HTML page correctly, a web browser must know which character set (character encoding) to use.
+<br>
+ASCII was the first character encoding standard (also called character set). ASCII defined 128 different 
+alphanumeric characters that could be used on the internet: numbers (0-9), English letters (A-Z), 
+and some special characters like ! $ + - ( ) @ < > .
+<br>
+ANSI (Windows-1252) was the original Windows character set, with support for 256 different character codes.
+<br>
+ISO-8859-1 was the default character set for HTML 4. This character set also supported 256 different 
+character codes.
+<br>
+Because ANSI and ISO-8859-1 were so limited, HTML 4 also supported UTF-8.
+<br>
+<br>
+<b>UTF-8 (Unicode) covers almost all of the characters and symbols in the world.</b>
+<br>
+The default character encoding for HTML5 is UTF-8.
+</p>
+
+
+<h4>The HTML charset Attribute</h4>
+<!-- <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1"> -->
+<!-- <meta charset="UTF-8"> -->
+
+<h4>The ASCII Character Set</h4>
+<p>ASCII uses the values from 0 to 31 (and 127) for control characters.</p>
+<p>ASCII uses the values from 32 to 126 for letters, digits, and symbols.</p>
+<p>ASCII does not use the values from 128 to 255.</p>
+
+
+<h4>The ANSI Character Set (Windows-1252)</h4>
+<p>ANSI is identical to ASCII for the values from 0 to 127.</p>
+<p>ANSI has a proprietary set of characters for the values from 128 to 159.</p>
+<p>ANSI is identical to UTF-8 for the values from 160 to 255.</p>
+
+
+<h4>The ISO-8859-1 Character Set</h4>
+<p>8859-1 is identical to ASCII for the values from 0 to 127.</p>
+<p>8859-1 does not use the values from 128 to 159.</p>
+<p>8859-1 is identical to UTF-8 for the values from 160 to 255.</p>
+
+
+<h4>The UTF-8 Character Set</h4>
+<p>UTF-8 is identical to ASCII for the values from 0 to 127.</p>
+<p>UTF-8 does not use the values from 128 to 159. </p>
+<p>UTF-8 is identical to both ANSI and 8859-1 for the values from 160 to 255.</p>
+<p>UTF-8 continues from the value 256 with more than 10 000 different characters.</p>
+
+<h4>The @charset CSS Rule</h4>
+<p>You can use the CSS @charset rule to specify the character encoding used in a style sheet:</p>
+<!-- @charset "UTF-8";-->
+
+
+<hr>
+<h3> 32 - HTML URL Encode (Uniform Resource Locators)</h3>
+<p>Web browsers request pages from web servers by using a URL.
+<br>
+A Uniform Resource Locator (URL) is used to address a document (or other data) on the web.
+<br>
+A web address like https://www.w3schools.com/html/default.asp follows these syntax rules:</p>
+<p>scheme://prefix.domain:port/path/filename</p>
+
+<p>scheme - defines the type of Internet service (most common is http or https)
+<br>
+prefix - defines a domain prefix (default for http is www)
+<br>
+domain - defines the Internet domain name (like w3schools.com)
+<br>
+port - defines the port number at the host (default for http is 80)
+<br>
+path - defines a path at the server (If omitted: the root directory of the site)
+<br>
+filename - defines the name of a document or resource
+</p>
+
+<h4>Common URL Schemes</h4>
+<p>Scheme	Short for	Used for
+<br>
+<b>http</b>	HyperText Transfer Protocol	Common web pages. Not encrypted
+<br>
+<b>https</b>	Secure HyperText Transfer Protocol	Secure web pages. Encrypted
+<br>
+<b>ftp</b>	File Transfer Protocol	Downloading or uploading files
+<br>
+<b>file</b>	 	A file on your computer
+</p>
+
+<h4>URL Encoding</h4>
+<p>URLs can only be sent over the Internet using the ASCII character-set. 
+If a URL contains characters outside the ASCII set, the URL has to be converted.
+<br>
+URL encoding converts non-ASCII characters into a format that can be transmitted over the Internet.
+<br>
+URL encoding replaces non-ASCII characters with a "%" followed by hexadecimal digits.
+<br>
+URLs cannot contain spaces. URL encoding normally replaces a space with a plus (+) sign, or %20.</p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+<h3> 33 - HTML XHTML</h3>
+<p>XHTML is HTML written as XML.</p>
+<ul>
+	<li>XHTML stands for EXtensible HyperText Markup Language</li>
+	<li>XHTML is almost identical to HTML</li>
+	<li>XHTML is stricter than HTML</li>
+	<li>XHTML is HTML defined as an XML application</li>
+	<li>XHTML is supported by all major browsers</li>
+</ul>
+
+<p>XML is a markup language where documents must be marked up correctly (be "well-formed").
+<br>
+XHTML was developed by combining the strengths of HTML and XML.
+<br>
+XHTML is HTML redesigned as XML.</p>
+
+
+<h4>The Most Important Differences from HTML:</h4>
+
+<h4>Document Structure</h4>
+<p>XHTML DOCTYPE is mandatory</p>
+<p>The xmlns attribute in &lt;html&gt; is mandatory</p>
+<p> &lt;html&gt;, &lt;head&gt;, &lt;title&gt;, and &lt;body&gt; are mandatory</p>
+
+<h4>XHTML Elements</h4>
+<p>XHTML elements must be properly nested</p>
+<p>XHTML elements must always be closed</p>
+<p>XHTML elements must be in lowercase</p>
+<p>XHTML documents must have one root element</p>
+
+<h4>XHTML Attributes</h4>
+<p>Attribute names must be in lower case</p>
+<p>Attribute values must be quoted</p>
+<p>Attribute minimization is forbidden</p>
+
+<h4>How to Convert from HTML to XHTML</h4>
+<ol>
+	<li>Add an XHTML &lt;!DOCTYPE&gt; to the first line of every page</li>
+	<li>Add an xmlns attribute to the html element of every page</li>
+	<li>Change all element names to lowercase</li>
+	<li>Close all empty elements</li>
+	<li>Change all attribute names to lowercase</li>
+	<li>Quote all attribute values</li>
+</ol>
+
+
+<hr>
+
+<h1> HTML Forms</h1>
+
+
+<h3>34 - HTML Forms</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3>35 - HTML Form Elements</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3>36 - HTML Input Types</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3>37 - HTML Input Attributes</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+
+<h1>HTML5</h1>
+
+<h3>38 - HTML5 Intro</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3>39 - HTML5 Support</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3>40 - HTML5 New Elements</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3>41 - HTML5 Semantics</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3>42 - HTML5 Migration</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3>43 - HTML5 Style Guide</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+<h1>HTML Graphics</h1>
+
+<h3>44 - HTML Canvas</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3>45 - HTML SVG</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3>46 - HTML Google Maps</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+<h1>HTML Media</h1>
+
+<h3>47 - HTML Media</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3>48 - HTML Video</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3>49 - HTML Audio</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3>50 - HTML Plug-ins</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3>51 - HTML YouTube</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+<h1>HTML APIs</h1>
+<h3>52 - HTML Geolocation</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+
+<hr>
+
+
+<h3>53 - HTML Drag/Drop</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3>54 - HTML Web Storage</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3>55 - HTML Web Workers</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+
+<hr>
+
+
+<h3>56 - HTML SSE</h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+<h1>HTML Examples</h1>
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+
+<hr>
+
+
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+<h1>HTML References</h1>
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+
+<hr>
+
+
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+
+<hr>
+
+
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+
+<hr>
+
+
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+
+<hr>
+
+
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+
+<hr>
+
+
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<hr>
+
+
+<h3> </h3>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+<h4></h4>
+<p></p>
+
+
+<hr>
+<hr>
+
+
+
+
+
+<h1>HTML Tag Reference</h1>
+
+<p>
+An HTML table is defined with the 'table' tag.
+<br>
+Each table row is defined with the 'tr' tag. 
+<br>
+A table header is defined with the 'th' tag. By default, table headings are bold and centered. 
+<br>
+A table data/cell is defined with the 'td' tag.
+</p>
+
+<!--<table id="t01" style="width:50%; background-color:#D4D4D7"> -->
+<table id="t01" style="width:50%;">
+<caption> Tag Reference</caption>
+
+  <tr style="width:50%;">
+    <th>Tag</th>
+    <th>Description</th>     
+  </tr>
+  
+  <tr>
+    <td>'html'</td>
+    <td>Defines the root of an HTML document</td>    
+  </tr>
+  
+  <tr>
+    <td>'body'</td>
+    <td>Defines the document's body</td>     
+  </tr>
+  
+  <tr>
+    <td>'head'</td>
+    <td>A container for all the head elements (title, scripts, styles, meta information, and more)</td>     
+  </tr>
+  
+  <tr>
+    <td>'h1' to 'h6'</td>
+    <td>Defines HTML headings</td>     
+  </tr>
+  
+  <tr>
+    <td>'hr'</td>
+    <td>Defines a thematic change in the content</td>     
+  </tr>
+  
+  <tr>
+    <td>'p'</td>
+    <td>Defines a paragraph</td>     
+  </tr>
+  
+  <tr>
+    <td>'br'</td>
+    <td>Inserts a single line break</td>     
+  </tr>
+  
+  <tr>
+    <td>'pre'</td>
+    <td>Defines pre-formatted text</td>     
+  </tr>
+  
+  <tr>
+    <td>'b'</td>
+    <td>Bold text</td>     
+  </tr>
+  
+  <tr>
+    <td>strong</td>
+    <td>Important text</td>     
+  </tr>
+  
+  <tr>
+    <td>'i'</td>
+    <td>Italic text</td>     
+  </tr>
+ 
+  <tr>
+    <td>'em'</td>
+    <td>Emphasized text</td>     
+  </tr>
+  
+  <tr>
+    <td>'mark'</td>
+    <td>Marked text</td>     
+  </tr>
+  
+  <tr>
+    <td>'small'</td>
+    <td>Small text</td>     
+  </tr>
+  
+  <tr>
+    <td>'del'</td>
+    <td>Deleted text</td>     
+  </tr>
+  
+  <tr>
+    <td>'ins'</td>
+    <td>Inserted text</td>     
+  </tr>
+  
+  <tr>
+    <td>'sub'</td>
+    <td>Subscript text</td>     
+  </tr>
+  
+  <tr>
+    <td>'sup'</td>
+    <td>Superscript text</td>     
+  </tr>
+    
+  <tr>
+    <td>'abbr'</td>
+    <td>Defines an abbreviation or acronym</td>     
+  </tr>
+  
+  <tr>
+    <td>'address'</td>
+    <td>Defines contact information for the author/owner of a document</td>     
+  </tr>
+  
+   <tr>
+    <td>'bdo'</td>
+    <td>Defines the text direction</td>     
+  </tr>
+  
+   <tr>
+    <td>'blockquote'</td>
+    <td>Defines a section that is quoted from another source</td>     
+  </tr>
+  
+   <tr>
+    <td>'cite'</td>
+    <td>Defines the title of a work</td>     
+  </tr>
+  
+   <tr>
+    <td>'q'</td>
+    <td>'Defines a short inline quotation'</td>     
+  </tr>
+  
+  <tr>
+    <td>'style'</td>
+    <td>Defines style information for an HTML document</td>     
+  </tr>
+  
+  <tr>
+    <td>'link'</td>
+    <td>Defines a link between a document and an external resource</td>     
+  </tr>
+  
+   <tr>
+    <td>'a'</td>
+    <td>element to define a link</td>     
+  </tr>
+  
+   <tr>
+    <td>'href'</td>
+    <td>attribute to define the link address</td>     
+  </tr>
+  
+   <tr>
+    <td>'target'</td>
+    <td>attribute to define where to open the linked document</td>     
+  </tr>
+  
+   <tr>
+    <td>'img'</td>
+    <td>element (inside 'a') to use an image as a link</td>     
+  </tr>
+  
+  <tr>
+    <td>'id'</td>
+    <td>attribute (id="value") to define bookmarks in a page</td>     
+  </tr>
+  
+  <tr>
+    <td>'href'</td>
+    <td>attribute (href="#value") to link to the bookmark</td>     
+  </tr>
+  
+   <tr>
+    <td>'img'</td>
+    <td>element to define an image</td>     
+  </tr>
+  
+   <tr>
+    <td>'src'</td>
+    <td>attribute to define the URL of the image</td>     
+  </tr>
+  
+   <tr>
+    <td>'alt'</td>
+    <td>attribute to define an alternate text for an image, if it cannot be displayed</td>     
+  </tr>
+  
+   <tr>
+    <td>'width and height'</td>
+    <td>CSS attributes to define the size of the image</td>     
+  </tr>
+  
+  <tr>
+    <td>'float'</td>
+    <td>CSS property to let the image float</td>     
+  </tr>
+  
+  <tr>
+    <td>'map'</td>
+    <td>element to define an image-map</td>     
+  </tr>
+  
+  <tr>
+    <td>'area'</td>
+    <td>element to define the clickable areas in the image-map</td>     
+  </tr>
+  
+   <tr>
+    <td>'img'</td>
+    <td>element usemap attribute to point to an image-map</td>     
+  </tr>
+  
+   <tr>
+    <td>'picture'</td>
+    <td>element to show different images for different devices</td>     
+  </tr>
+  
+   <tr>
+    <td>'table'</td>
+    <td>element to define a table</td>     
+  </tr>
+  
+  <tr>
+    <td>'tr'</td>
+    <td>element to define a table row</td>     
+  </tr>
+  
+  <tr>
+    <td>'td'</td>
+    <td>element to define a table data</td>     
+  </tr>
+  
+   <tr>
+    <td>'th'</td>
+    <td>element to define a table heading</td>     
+  </tr>
+  
+  <tr>
+    <td>'caption'</td>
+    <td>element to define a table caption</td>     
+  </tr>
+  
+  <tr>
+    <td>'border'</td>
+    <td>property to define a border</td>     
+  </tr>
+  
+   <tr>
+    <td>'border-collapse'</td>
+    <td>property to collapse cell borders</td>     
+  </tr>
+  
+  <tr>
+    <td>'padding'</td>
+    <td>property to add padding to cells</td>     
+  </tr>
+  
+  <tr>
+    <td>'text-align'</td>
+    <td>property to align cell text</td>     
+  </tr>
+  
+   <tr>
+    <td>'border-spacing'</td>
+    <td>property to set the spacing between cells</td>     
+  </tr>
+  
+  <tr>
+    <td>'colspan'</td>
+    <td>attribute to make a cell span many columns</td>     
+  </tr>
+  
+  <tr>
+    <td>'rowspan'</td>
+    <td>attribute to make a cell span many rows</td>     
+  </tr>
+  
+   <tr>
+    <td>'id'</td>
+    <td>attribute to uniquely define one table</td>     
+  </tr>
+  
+  <tr>
+    <td>'ul'</td>
+    <td>element to define an unordered list</td>     
+  </tr>
+  
+  <tr>
+    <td>'ol'</td>
+    <td>element to define an ordered list</td>     
+  </tr>
+  
+   <tr>
+    <td>'type'</td>
+    <td>attribute to define the numbering type</td>     
+  </tr>
+  
+  <tr>
+    <td>'li'</td>
+    <td>element to define a list item</td>     
+  </tr>
+  
+  <tr>
+    <td>'dl'</td>
+    <td>element to define a description list</td>     
+  </tr>
+  
+   <tr>
+    <td>'dt'</td>
+    <td>element to define the description term</td>     
+  </tr>
+  
+  <tr>
+    <td>'dd'</td>
+    <td>element to describe the term in a description list</td>     
+  </tr>
+ 
+  <tr>
+    <td>'div'</td>
+    <td>Defines a section in a document (block-level)</td>     
+  </tr>
+  
+  <tr>
+    <td>'span'</td>
+    <td>Defines a section in a document (inline)</td>     
+  </tr>
+  
+  <tr>
+    <td>'iframe'</td>
+    <td>Defines an inline frame</td>     
+  </tr>
+ 
+   <tr>
+    <td>'script'</td>
+    <td>Defines a client-side script</td>     
+  </tr>
+  
+  <tr>
+    <td>'noscript'</td>
+    <td>Defines an alternate content for users that do not support client-side scripts</td>     
+  </tr>
+ 
+  <tr>
+    <td>'head'</td>
+    <td>Defines information about the document</td>     
+  </tr>
+  
+   <tr>
+    <td>'title'</td>
+    <td>Defines the title of a document</td>     
+  </tr>
+  
+  <tr>
+    <td>'base'</td>
+    <td>Defines a default address or a default target for all links on a page</td>     
+  </tr>
+  
+  <tr>
+    <td>'link'</td>
+    <td>Defines the relationship between a document and an external resource</td>     
+  </tr>
+  
+  <tr>
+    <td>'meta'</td>
+    <td>Defines metadata about an HTML document</td>     
+  </tr>
+  
+   <tr>
+    <td>'script'</td>
+    <td>Defines a client-side script</td>     
+  </tr>
+  
+  <tr>
+    <td>'style'</td>
+    <td>Defines style information for a document</td>     
+  </tr>
+ 
+  
+  <tr>
+    <td>'code'</td>
+    <td>Defines programming code</td>     
+  </tr>
+  
+   <tr>
+    <td>'kbd'</td>
+    <td>Defines keyboard input</td>     
+  </tr>
+  
+  <tr>
+    <td>'samp'</td>
+    <td>Defines computer output</td>     
+  </tr>
+  
+  <tr>
+    <td>'var'</td>
+    <td>Defines a variable</td>     
+  </tr>
+  
+ <tr>
+    <td>'pre'</td>
+    <td>Defines preformatted text</td>     
+  </tr>
+  
+   <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+   <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+   <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+
+<tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+   <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+
+<tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+   <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+   <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+ 
+  
+  
+</table>
+
+
+
+<h1>CSS Tag Reference</h1>
+
+<table style="width:50%; background-color:#D4D4D7">
+  <tr style="width:50%; background-color:#A4A4A5">
+    <th>Tag</th>
+    <th>Description</th>     
+  </tr>
+
+  <tr style="background-color:#C0C0C1;">
+    <td>'style'</td>
+    <td>attribute for inline styling</td>     
+  </tr>
+  
+  <tr style="background-color:#C0C0C1;">
+    <td>'style'</td>
+    <td> element to define internal CSS</td>     
+  </tr>
+  
+   <tr style="background-color:#C0C0C1;">
+    <td>'link'</td>
+    <td>element to refer to an external CSS file</td>     
+  </tr>
+  
+   <tr style="background-color:#C0C0C1;">
+    <td>'head'</td>
+    <td>element to store 'style' and 'link' elements</td>     
+  </tr>
+  
+   <tr style="background-color:#C0C0C1;">
+    <td>'color'</td>
+    <td>property for text colors</td>     
+  </tr>
+  
+   <tr style="background-color:#C0C0C1;">
+    <td>'font-family'</td>
+    <td>property for text fonts</td>     
+  </tr>
+  
+  <tr style="background-color:#C0C0C1;">
+    <td>font-size</td>
+    <td>property for text sizes</td>     
+  </tr>
+  
+  <tr style="background-color:#C0C0C1;">
+    <td>'border'</td>
+    <td>property for borders</td>     
+  </tr>
+   
+  
+   <tr style="background-color:#C0C0C1;">
+    <td>'padding'</td>
+    <td>property for space inside the border</td>     
+  </tr>
+  
+   <tr style="background-color:#C0C0C1;">
+    <td>'margin'</td>
+    <td>property for space outside the border</td>     
+  </tr>
+  
+   <tr style="background-color:#C0C0C1;">
+    <td></td>
+    <td></td>     
+  </tr>
+  
+   <tr style="background-color:#C0C0C1;">
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  
+  <tr>
+    <td>'list-style-type'</td>
+    <td>property to define the list item marker</td>     
+  </tr>
+  
+  <tr>
+    <td>'float:left'</td>
+    <td>to display a list horizontally</td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+  
+  
+  
+</table>
+
+
+<p>
+Use the style attribute for styling HTML elements
+Use 'background-color' for background color
+Use 'color' for text colors
+Use 'border' to define border width and color
+Use 'font-family' for text fonts
+Use 'font-size' for text sizes
+Use 'text-alig'n for text alignment
+</p>
+
+
+
+</body>
+</html>
