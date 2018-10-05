@@ -27,16 +27,16 @@ The <head> element is placed between the <html> tag and the <body> tag:-->
 
 
 
-<!-- 
+
 <nav>
-	<!- - Top Navigation Menu - ->
+	<!-- Top Navigation Menu -->
 	<div class="top_nav">
 		<ul>
-			<li class="top_nav"  style="width:58vw;"><a href="/index.html" style="text-align:left;">Home</a></li>
- 			<li class="top_nav"><a href="/projects/projects.html">Projects</a></li>
- 	 		<li class="top_nav"><a href="/projects/projects_index.html">Site Map</a></li>
- 			<li class="top_nav"><a href="/cv.html">CV</a></li>
- 	 		<li class="top_nav"><a href="/contact.html">Contact</a></li>
+			<li class="top_nav"  style="width:58vw;"><a href="./index.html" style="text-align:left;">Home</a></li>
+ 			<li class="top_nav"><a href="./projects.html">Projects</a></li>
+ 	 		<li class="top_nav"><a href="./project_index.html">Site Map</a></li>
+ 			<li class="top_nav"><a href="./cv.html">CV</a></li>
+ 	 		<li class="top_nav"><a href="./contact.html">Contact</a></li>
 		</ul>
 	</div>
 		
@@ -48,19 +48,22 @@ The <head> element is placed between the <html> tag and the <body> tag:-->
   			<div class="bar3"></div>  			
 		</div>
   		
-  		<!- - Navigation links (hidden by default) - ->
+  		<!-- Navigation links (hidden by default) -->
   		<div id="myLinks">
-   			<a href="#news">News</a>
-   			<a href="#contact">Contact</a>
-    		<a href="#about">About</a>
+   			<a href="./index.html" style="text-align:left;">Home</a>
+   			<a href="./projects.html">Projects</a>
+   			<a href="./project_index.html">Site Map</a>
+   			<a href="./cv.html">CV</a>
+   			<a href="./contact.html">Contact</a>
  	   </div>
   	   
 	</div>
- 	 	
-</nav> 
--->
+ 	
+ 	
+</nav>
 
-<!-- 
+
+
 <script>
 /* Toggle between showing and hiding the navigation menu links when the user clicks on the hamburger menu / bar icon */
 function myFunction() {
@@ -72,15 +75,15 @@ function myFunction() {
   }
 }
 </script>
--->
+
 
 <!-- top navigation panel -->
-<script src="topnav.js"></script>
+ <!--<script src="topnav.js"></script>-->
 
 
 
 <div class="top_panel">
-	<h1 style="padding:2%;">Predictive Learning</h1>
+	<div class="my_heading1">Predictive Learning</div>	
 	<div id="top_panel_mask1"> </div>
 	<div id="top_panel_mask2"> </div>
 	<div id="top_panel_mask3"> </div>
@@ -113,11 +116,10 @@ function myFunction() {
   <img src="./img/IMG_5305.jpg" style="max-width:100%;height:auto;">
 </div> -->
 
-<div style="background-color:#FFFFFF;
-	text-align:center; font-size:2vw;">
+<div style="background-color:#FFFFFF; text-align:center; margin:40px 0px;">
 	
-	<h2>Explore. Learn. Predict.</h2>
-	<p>Data Science projects with a focus on Machine Learning</p>
+	<h1>Explore. Learn. Predict.</h1>
+	<p style="margin-top:40px;">Data Science projects with a focus on Machine Learning</p>
 </div>
 
 <!--
@@ -135,7 +137,7 @@ function myFunction() {
 
   	<!--<div class="icon_1"></div>
   	<div class="icon_2"></div>-->
-  	<p>Data analysis and visualisation</p>
+  	<p style="font-size:1.2em">Data cleaning, exploration and visualisation</p>
   </div>
   
  
@@ -152,15 +154,15 @@ function myFunction() {
     <div class="middle_menu_heading">SQL</div>
     <img class="middle_menu_img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAM2SURBVGhD7VrrThNBFOZdjL6BmhifRuslRCOikkagkN4oUmNr6RUoRaqFUtr6Q7HlEqQX01Jq6cXI5YdBERAU4QXGPcdtLTKJ243tLLon+ZLZc9qT79uZOXsmmSbZTpIZlSNn7OpJjdMQfswSwKH3nvs0T6s2M7X7L46aI5tL8Y8kn9piCuAAXIztvgs8PeHm0AbnVvP7ZL10KAmscFzs2uAMT0+4uXpCaVpClgBOPD3hJgupI2QhtGQsIQuhJWMJWQgtGUvIQmjJWEKUEKc+FKclY4biIXHoQjGennCzqP2Kl2OL+9SkDDDFcbF1jV/i6Qm3R8pn572WyDa8CVrihoLj4LVEt/uUY2d5esLNqQ9Ha2nj14oHHL4f868WDsj73Ldj/lqxslznNh4OPk79c9J93UE6FTYS8iQrsaA7Trqv2UnH5X7i1IXJu+xX9M+GC0TT7CJPTJHKb4WgrlXLovIjUdN9H7GpJ8nUeBb9M6E8+vW3homxzYtjr2UaY9HJZXx29704kutPqJuQUnYPCRlaPdyyOhqzdE1gLBFdJ4XUNjdbVqK9OYhLTXJCYKnAcoLlk4iuVfxwLO1U9ONyA+LgA7FAPsOdvyUnBOCzzSKp8v6AmcklP6Ovp2W48jtTxxj6Eq/WpCkEKtW4Yx5nAMiFPW9INv4Jx4bbv4SY23khEYkKKWOaJ6dvcWO5hbHmxkAl3ntnBH2ZhQ1pC4G9oLpqx7IKz4bWYST7NrnJ7aU9orpixb0EMyg5IfDm4fsQGIgRuyaI5IZ4coGhGD7D3nBoQzgeNUcxVhYCZRmWJSCX3DqSm4a6CVl8vYFlFUgB4DtSzHzBGIgsf2MA6mYnSc19wFhZSDWgTFfnpkGUEGhRoIzSElajlNlFgoX0zrEYVDCITbgWUAgQDgzGUCRUtmpAC/L7/6shukV52Pb03N9sGktLu8TPCUrP/5yVmoBNY0Rc0yi1Nh64iGrjXbpwjJaQGbhZEXWwErLZG426Va1GQxZCS8YSshBaMpaQhdCSsYQshJaMJf5vIXBhQEgb3yiIvjAA1yX+iSscYHCRxdod0NnVAQ9LAIcHdz2neFqynQBravoBvm57FcbhS+UAAAAASUVORK5CYII=">
 
-    <p>Local and online databases</p>
+    <p style="font-size:1.2em">Data processing with relational databases</p>
   </div>
 </div>
 
 
 <div class="bottom_panel">
             
-	<p style="font-size:3vw;">Data Science Projects by Bruno Henriques<p>
-	<p style="font-size:2vw;">explore data patterns, construct robust models, predict future trends<p>     
+	<h1>Data Science Projects by Bruno Henriques</h1>
+	<p>explore data patterns, construct robust models, predict future trends</p>     
 	
             
 </div>
