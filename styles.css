@@ -484,6 +484,31 @@ font-size:1.2em;
  
 }
 
+#arrowAnim {
+  width: 100vw;
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.arrow {
+  width: 5vw;
+  height: 5vw;
+  border: 2.5vw solid;
+  border-color: black transparent transparent black;
+  transform: rotate(-45deg);
+}
+
+.arrow_2 {
+  width: 2.5vw;
+  height: 2.5vw;
+  border: 2.5vw solid;
+  border-color: black transparent transparent black;
+  transform: rotate(-45deg);
+}
+
+
 
 
 /*@media (min-width:768px){.contact_box{width:750px}}
