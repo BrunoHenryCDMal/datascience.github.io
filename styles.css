@@ -60,7 +60,8 @@ font-size:1.2em;
     float: left; 
     background-color:#FFFFFF;
     color: #5F5F60;
-    width: 10%;   
+    width: 8%;
+    /*width: 72px;*/
 }
 
 .top_nav li a {
@@ -638,7 +639,7 @@ color: #52A6D8;
 
 @media (max-width: 960px) {
   
-  .contact_box_over, .contact_box_over_shadow { display: none; }
+  .contact_box_over, .contact_box_over_shadow, .triangle-down, .triangle-up { display: none; }
  
 }
 
