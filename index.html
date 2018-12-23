@@ -5,7 +5,7 @@ The <head> element is a container for metadata. HTML metadata is
 data about the HTML document. Metadata is not displayed.
 The <head> element is placed between the <html> tag and the <body> tag:-->
 <head>
-  <title>W3 course on HTML</title>
+  <title>Predictive Learning</title>
   <meta charset="UTF-8">
   
  <link rel="stylesheet" href="styles.css">  
@@ -15,7 +15,7 @@ The <head> element is placed between the <html> tag and the <body> tag:-->
 <meta name="description" content="Web tutorial">
 <meta name="keywords" content="HTML,CSS,XML,JavaScript">
 <meta name="author" content="Bruno Henriques">
-<meta http-equiv="refresh" content="30">
+<meta http-equiv="refresh" content="60">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 </head>
@@ -105,14 +105,19 @@ function myFunction() {
 -->
 
 <div style="padding:0vw;text-align:center;">
-  <img src="./img/front_7.png" style="width:100%;height:20vw;"> 
+  <img src="./img/front_7.png" style="width:100%;height:20vw; border-radius:6px;  "> 
 </div>
 
 
-<div style="background-color:#FFFFFF; text-align:center; margin:40px 0px;">
+<!-- 25274D 464866 AAABB8 2E9CCA 29648A-->
+
+<div class="middle_box">  
+
+<div style="text-align:center; margin:10px 0px; color:#FFFFFF; 
+            padding:10px 10px; background-color:#25274D; border-radius: 6px 6px 0 0; font-size: 1.3em;">
 	
 	<!-- <h1>Explore. Learn. Predict.</h1> -->
-	<p style="margin-top:40px;">Data Science projects with a focus on Machine Learning</p>
+	<p>Data Science projects with a focus on Machine Learning</p>
 </div>
 
 
@@ -125,34 +130,32 @@ function myFunction() {
 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAM2SURBVGhD7VrrThNBFOZdjL6BmhifRuslRCOikkagkN4oUmNr6RUoRaqFUtr6Q7HlEqQX01Jq6cXI5YdBERAU4QXGPcdtLTKJ243tLLon+ZLZc9qT79uZOXsmmSbZTpIZlSNn7OpJjdMQfswSwKH3nvs0T6s2M7X7L46aI5tL8Y8kn9piCuAAXIztvgs8PeHm0AbnVvP7ZL10KAmscFzs2uAMT0+4uXpCaVpClgBOPD3hJgupI2QhtGQsIQuhJWMJWQgtGUvIQmjJWEKUEKc+FKclY4biIXHoQjGennCzqP2Kl2OL+9SkDDDFcbF1jV/i6Qm3R8pn572WyDa8CVrihoLj4LVEt/uUY2d5esLNqQ9Ha2nj14oHHL4f868WDsj73Ldj/lqxslznNh4OPk79c9J93UE6FTYS8iQrsaA7Trqv2UnH5X7i1IXJu+xX9M+GC0TT7CJPTJHKb4WgrlXLovIjUdN9H7GpJ8nUeBb9M6E8+vW3homxzYtjr2UaY9HJZXx29704kutPqJuQUnYPCRlaPdyyOhqzdE1gLBFdJ4XUNjdbVqK9OYhLTXJCYKnAcoLlk4iuVfxwLO1U9ONyA+LgA7FAPsOdvyUnBOCzzSKp8v6AmcklP6Ovp2W48jtTxxj6Eq/WpCkEKtW4Yx5nAMiFPW9INv4Jx4bbv4SY23khEYkKKWOaJ6dvcWO5hbHmxkAl3ntnBH2ZhQ1pC4G9oLpqx7IKz4bWYST7NrnJ7aU9orpixb0EMyg5IfDm4fsQGIgRuyaI5IZ4coGhGD7D3nBoQzgeNUcxVhYCZRmWJSCX3DqSm4a6CVl8vYFlFUgB4DtSzHzBGIgsf2MA6mYnSc19wFhZSDWgTFfnpkGUEGhRoIzSElajlNlFgoX0zrEYVDCITbgWUAgQDgzGUCRUtmpAC/L7/6shukV52Pb03N9sGktLu8TPCUrP/5yVmoBNY0Rc0yi1Nh64iGrjXbpwjJaQGbhZEXWwErLZG426Va1GQxZCS8YSshBaMpaQhdCSsYQshJaMJf5vIXBhQEgb3yiIvjAA1yX+iSscYHCRxdod0NnVAQ9LAIcHdz2neFqynQBravoBvm57FcbhS+UAAAAASUVORK5CYII=">
 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAALxSURBVGhD7ZjPa9NgGMcroqh4UMSLBxF1N48evHkVRE/rRZqkm23ZVFx0TdpKt4ALogiKItIuadPKBrbb1DGF+WMnj8L0JjiQCYI48W+o71Oexiy8Wsmb5k2kH3jp+z7v+5TnmzzP+yaJ9QkAoZ7fN1TJH6Y1oZw7iMvCj2TlDp2vXduYWLrzQ1++/83ZRmcn13FZNAAx8py+9nxtufVqfcVu4ws3PuGS6EATE0kh5x7m94oVtSk39O8dMZETIlSUk4KhzieM/FHnnQmNkGFTOYBdKplyZhsRMCWaynXoo9lOs7GGzrnYW7EtgqleFQ31qWAqc5KpnsYZG7j6MAd3A02baO9mVmEVh8ED54Joqk0iJA3jeFPbTgK+QK78IrnyZ0FkwswmRUMxJWtsT9vpD8B/YTdYpGn1BAn4ZcIcP4YmG8nSdkiGepnMvwEhaA4Zv1PJij/QdqM1XHQrWHcqhZLEdO5iu2ANpSEZ2VNotvlbKoWCTFnbRQRUSLsEYyzYEVtQFFIpWVUGSKq8gKuNJpuOILL7rPiZSslqcSBTn5DdLfWo6G1TSBi5MyRV5ocqhf1oCoR0rZi697baqq82NzX58dQXXPJvxJvxrUQAnLA69NEcGCBk5sOC/bDo6aGxs+vA3UBT4DALIfl+nNyJRbGUPYImLjAJgWIlQkqDjSs70cQNz0LItlmQDCWDQ1+Abdjre7dnIc5HZr9I14vDhWe3f3p57/al2P2CJZi+kF7QLRg4pWmnN5zqvgvpZcHCKe0+ueE0Bz/fhfSyYOHXPQfreyOE4Q/7QngIYSnYUAlhKdhQCWEJxnchIzOT79QnN987m9zQP6ZqhcFICeEVDIsvFV7BsPhS4RUMiy8VXsGw+FLhFQyLLxVewbD4UuEVDIsvFV7BsPhS4RUMiy8VXsGw+FLhFQyLLxVewbD4UuEVDIsvldFZ7fOt16WvzqYt3d2A93Vo0HfPgw9PXyrwRYT2pQS+oHT7isLL9z8jFvsFmQM4eFkDPbUAAAAASUVORK5CYII=">
   -->	
+
+
+  
 <div style="overflow:auto">
   <div class="middle_menu">  	
-  	<div class="middle_menu_heading">Pandas & Seaborn</div>
-  	<img class="middle_menu_img" src="data:image/png;base64,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">
-
-  	<!--<div class="icon_1"></div>
-  	<div class="icon_2"></div>-->
-  	<p style="font-size:1.2em">Data cleaning, exploration and visualisation</p>
+  	<div class="middle_menu_header"><a href="./projects_visual.html">Pandas & Seaborn</a></div>
+  	<img class="middle_menu_img" src="./img/icons1_3.png">
+  	<p style="font-size:1.2em; padding:0 10px;">Data cleaning, exploration and visualisation</p>
   </div>
   
  
 
   <div class="middle_menu">
-    <div class="middle_menu_heading">Machine Learning</div>
-   
-    <img class="middle_menu_img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAbLSURBVGhD7ZlZUFNXGMex00U709rpTGdqp1P70uli2+more1Tt5c+tFattChqNBtrwp4NyM3GEmJuAghlD2G5SVgCZRUQAQWFtrYVxA5o2XTU0SKW+uDSTno+ONEEbmwCqJdpfzP/yT3nfuec78s9yz3n+v2Pj/CKZOuFFqUt0qbpEVKqIyFlhGi7LWoVvr08CKeU2SmtWZfrzzQ7WsfaHa2j7Q7ziYrbKKjTe4viXsFmzCbEoozNPmaenglgjhrPtjoirOpfWSZiJTZnJgRBPBJTmTxMF4RT5hO226Gl8jhchJnsyROt07XnXaEL4I5QNxNaVZ24CDPZVRizKeNIEW23clWkLakHF2Em+wqlzykajBN0zjtVN9zsEFBKKy7CXIQW9WFwli4IEJrNLrGKJRuwOXMJzBO9CAOeLpis7uI/wsoUmdiU+UAw8GQS68ip9K7C62ntOVeiK5KHQ8qJaGyyvOAn6sz7sqQf7s4XvQ5TM85efvAkpBlfLl9YBLGSJzXk4uTyhScxbEKBhODk/WVvkeitCKvqkMieOiyu0Y5EV2r6gym5kp/LfwybLBgIIkimfw8nvQbaBh8iK5P6wSdRdeqQ0KJq21MsWodN3Akxy7+R1xsuNJw96DZFFp+w3gy3KI75VxCPY9MFwZeQOdC9cNIroE2hVdlj/qnilqtP4KO8Tn8BfMamswTmyNZIarUTLWOH3IJwyjJQcyuMkpuw+YJAgRTiS68RWBUmS3/tX3Q+ga8Su3aCZYp9Hpv7+YValAeqBuvmGbtKUpM24utGyF/ctnqLpGHDllj7BxxJZgHO9gpoS1qrG6XzxalK5HN4uTIDF0GvETZ1N52hqwxdBVdZ+d69Snwpa3knIKmzg6PvHRfmDU4J8wamuft7JgOSDnd8IW16G5vdk90FcRuNXflTdL64KsKi7sZFvAykM396d45sIy7ike3qtkCOoe98SsOkQ9d8zU2p9ZMOuLdN1b4Tm3skMFfyLrRJ54urImyao7jIbNeCx0Rn6JS4Om2SJ9NT0Nd5MgObLza+hIvfAf5trvGHibkBzBWb/P7cVqLlTVzsDux43dogqZEDbfDjSYu4SneVzhenKga/c4SWEXe7FgwYGDgeB3u//VYopSwCW4Eg/YkgseEjvpTU8KWGEp6UTEe/W/ji1NUBmo4uuicxV/BkoOuxCMMzXLF+K1pjMpDKUZ3JXDH5iXN2mxnsaKKh8wl8FdVox90GOzAz/aIpbf70a7sRRil7PE2/EAAEwhNnfMvRd1+nc5xOYMuTZOYFScntHEL/LK7ODWgzHLWNloAbrj6Bj4l1++dPv05gkRGgxQYWHbFdOxJp05z0dkHcLGvcCAObzmk6CfMHr8KMhot7xLkgRlVoToJP4BvysRVt2t7AJkvL/QrkgfMZ0fQ0m+wdp3OaTmzy+PjmuNqncHFm4dNg1xzuwMWYB0y/bEPfOTrnXeVp+mUUdxfE3+cFAHlssmfSX92+A5szm13xJZwd6oNDHEPv2OwryuAUh+wbg1cUTnxOTWhsmvvcz0wcK9AiSaE9+aMwAXwuq1sPgmu4C0GglXtRb9IPBFjgQDhJC19q3AXCSeYBT4EnIUvhqeAsj6C3gWKejFyDk8yCJya56J/+FCfvCTsu8wVGnqpERelX+dr3GdnF0L8by5Wk+/zKAU8Fng5OPlzgDRg5lI2TPvFQuxjsp2HbC4Jr1KWUQQnGBX8L5MoMe4Nkhj1wzTKJX2blid7fWRCzdubm/QC+9QksCrO0Nm0U7eGvgcT2tImwAs0pQbrgCWy2IHipqS0RtqRTSS1ZFw8cNU3Db6RN/UtIceLH2GRpmN3kKI5R/TXzjmeoAfttuLfQg7yg0sStigbj5YMj7jtUSKuajBeDSxM2Y9PFE1ZKKOYelLnK9KP1ZniZgsDmXgNdM7Yq5YynbTbkx1QmnfH1KMoj0WiHRteQq6Irk3/G5l7DLU74Or+v7CZdfU7l95bf4JfI/XGRxSGyp93zsAwksmtHsbnXhFMqXdXpetr6nIL7qOvqcJHFIarWDtE14ipRlXYIm3tNSLki3tJvp63PKaq/2sEvJWS4yOIQWFWHGs+20DYEgpMNOLjA5l7DypW+ltKafYmuTqdSWg9cCiyIexUXWRzwyUHeaDhPNyghT95Anvd41P8vCMpVDRUDtX/PrRcE+eGUsh6bLg2hlHwHGivjrgfecI3WkrHgciIAm/kMP5d4Eo2Brqxu05/Nv7XN1Au/mSiN8jvhPjZdOuATBJyAw+ExCI4sIQ/fXjgOvxXBJYlfCa2qJlTvcfjlmxO24bv/Ffz8/gFMW2ej4HdiSAAAAABJRU5ErkJggg==">
-
-    <p>Feature engineering, decision trees, neural networks</p>
+    <div class="middle_menu_header"><a href="./projects_ML.html">Machine Learning</a></div>
+   <img class="middle_menu_img" src="./img/icons2_4.png">
+    <p style="font-size:1.2em; padding:0 10px;">Feature engineering and model training</p>
   </div>
 
   <div class="middle_menu">
-    <div class="middle_menu_heading">SQL</div>
-    <img class="middle_menu_img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAM2SURBVGhD7VrrThNBFOZdjL6BmhifRuslRCOikkagkN4oUmNr6RUoRaqFUtr6Q7HlEqQX01Jq6cXI5YdBERAU4QXGPcdtLTKJ243tLLon+ZLZc9qT79uZOXsmmSbZTpIZlSNn7OpJjdMQfswSwKH3nvs0T6s2M7X7L46aI5tL8Y8kn9piCuAAXIztvgs8PeHm0AbnVvP7ZL10KAmscFzs2uAMT0+4uXpCaVpClgBOPD3hJgupI2QhtGQsIQuhJWMJWQgtGUvIQmjJWEKUEKc+FKclY4biIXHoQjGennCzqP2Kl2OL+9SkDDDFcbF1jV/i6Qm3R8pn572WyDa8CVrihoLj4LVEt/uUY2d5esLNqQ9Ha2nj14oHHL4f868WDsj73Ldj/lqxslznNh4OPk79c9J93UE6FTYS8iQrsaA7Trqv2UnH5X7i1IXJu+xX9M+GC0TT7CJPTJHKb4WgrlXLovIjUdN9H7GpJ8nUeBb9M6E8+vW3homxzYtjr2UaY9HJZXx29704kutPqJuQUnYPCRlaPdyyOhqzdE1gLBFdJ4XUNjdbVqK9OYhLTXJCYKnAcoLlk4iuVfxwLO1U9ONyA+LgA7FAPsOdvyUnBOCzzSKp8v6AmcklP6Ovp2W48jtTxxj6Eq/WpCkEKtW4Yx5nAMiFPW9INv4Jx4bbv4SY23khEYkKKWOaJ6dvcWO5hbHmxkAl3ntnBH2ZhQ1pC4G9oLpqx7IKz4bWYST7NrnJ7aU9orpixb0EMyg5IfDm4fsQGIgRuyaI5IZ4coGhGD7D3nBoQzgeNUcxVhYCZRmWJSCX3DqSm4a6CVl8vYFlFUgB4DtSzHzBGIgsf2MA6mYnSc19wFhZSDWgTFfnpkGUEGhRoIzSElajlNlFgoX0zrEYVDCITbgWUAgQDgzGUCRUtmpAC/L7/6shukV52Pb03N9sGktLu8TPCUrP/5yVmoBNY0Rc0yi1Nh64iGrjXbpwjJaQGbhZEXWwErLZG426Va1GQxZCS8YSshBaMpaQhdCSsYQshJaMJf5vIXBhQEgb3yiIvjAA1yX+iSscYHCRxdod0NnVAQ9LAIcHdz2neFqynQBravoBvm57FcbhS+UAAAAASUVORK5CYII=">
-
-    <p style="font-size:1.2em">Data processing with relational databases</p>
+    <div class="middle_menu_header"><a href="./projects_SQL.html">SQL & Scraping</a></div>
+   <img class="middle_menu_img" src="./img/icons3.png">
+    <p style="font-size:1.2em; padding:0 10px;">Data processing with relational databases</p>
   </div>
 </div>
 
+</div>
 
 <div class="bottom_panel">
             
