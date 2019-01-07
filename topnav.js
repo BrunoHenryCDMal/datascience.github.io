@@ -7,7 +7,7 @@ document.write(" 			<li class=\"top_nav\"><a href=\".\/projects.html\">Projects<
 document.write(" 	 		<li class=\"top_nav\"><a href=\".\/projects_visual.html\">Visual<\/a><\/li>");
 document.write(" 	 		<li class=\"top_nav\"><a href=\".\/projects_ML.html\">ML<\/a><\/li>");
 document.write(" 	 		<li class=\"top_nav\"><a href=\".\/projects_SQL.html\">SQL<\/a><\/li>");
-document.write(" 			<li class=\"top_nav\"><a href=\".\/cv.html\">CV<\/a><\/li>");
+document.write(" 			<li class=\"top_nav\"><a href=\".\/CV.html\">CV<\/a><\/li>");
 document.write(" 	 		<li class=\"top_nav\"><a href=\".\/contact.html\">Contact<\/a><\/li>");
 document.write("		<\/ul>");
 document.write("	<\/div>");
@@ -27,7 +27,7 @@ document.write("   			<a href=\".\/projects.html\">Projects<\/a>");
 document.write("   			<a href=\".\/projects_visual.html\">Visual<\/a>");
 document.write("   			<a href=\".\/projects_ML.html\">ML<\/a>");
 document.write("   			<a href=\".\/projects_SQL.html\">SQL<\/a>");
-document.write("   			<a href=\".\/cv.html\">CV<\/a>");
+document.write("   			<a href=\".\/CV.html\">CV<\/a>");
 document.write("   			<a href=\".\/contact.html\">Contact<\/a>");
 document.write(" 	   <\/div>");
 document.write("  	   ");

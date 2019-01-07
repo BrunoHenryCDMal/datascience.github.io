@@ -13137,7 +13137,7 @@ div#notebook {
 <p><br></p>
 <h2 id="Tools:">Tools:<a class="anchor-link" href="#Tools:">&#182;</a></h2><ul>
 <li>Models:<ul>
-<li>OLS</li>
+<li>Linear Regression with statsmodels OLS</li>
 </ul>
 </li>
 <li>Error Metric: SSE, RSS, TSS, R2</li>
@@ -13157,7 +13157,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -13225,7 +13225,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">pisa</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1975</span><span class="p">,</span> <span class="mi">1988</span><span class="p">),</span> 
@@ -13287,7 +13287,6 @@ div#notebook {
 <span class="c1"># fit model</span>
 <span class="n">linearfit</span> <span class="o">=</span> <span class="n">linear</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">linearfit</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span><span class="n">linearfit</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
 </pre></div>
 
@@ -13305,49 +13304,10 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>                            OLS Regression Results                            
-==============================================================================
-Dep. Variable:                   lean   R-squared:                       0.988
-Model:                            OLS   Adj. R-squared:                  0.987
-Method:                 Least Squares   F-statistic:                     904.1
-Date:                Mon, 17 Dec 2018   Prob (F-statistic):           6.50e-12
-Time:                        11:53:30   Log-Likelihood:                 83.777
-No. Observations:                  13   AIC:                            -163.6
-Df Residuals:                      11   BIC:                            -162.4
-Df Model:                           1                                         
-Covariance Type:            nonrobust                                         
-==============================================================================
-                 coef    std err          t      P&gt;|t|      [0.025      0.975]
-------------------------------------------------------------------------------
-const          1.1233      0.061     18.297      0.000       0.988       1.258
-year           0.0009    3.1e-05     30.069      0.000       0.001       0.001
-==============================================================================
-Omnibus:                        0.310   Durbin-Watson:                   1.642
-Prob(Omnibus):                  0.856   Jarque-Bera (JB):                0.450
-Skew:                           0.094   Prob(JB):                        0.799
-Kurtosis:                       2.108   Cond. No.                     1.05e+06
-==============================================================================
-
-Warnings:
-[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-[2] The condition number is large, 1.05e+06. This might indicate that there are
-strong multicollinearity or other numerical problems.
-
+<pre>
  const    1.123338
 year     0.000932
 dtype: float64
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>/Users/BrunoHenriques/anaconda3/lib/python3.6/site-packages/scipy/stats/stats.py:1394: UserWarning: kurtosistest only valid for n&gt;=20 ... continuing anyway, n=13
-  &#34;anyway, n=%i&#34; % int(n))
 </pre>
 </div>
 </div>
@@ -13366,7 +13326,7 @@ dtype: float64
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">yhat</span> <span class="o">=</span> <span class="n">linearfit</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
@@ -13391,7 +13351,7 @@ dtype: float64
 
 
 <div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
+<img src="data:image/png;base64,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
 "
 >
 </div>
@@ -13425,7 +13385,7 @@ dtype: float64
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">SSE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="o">-</span><span class="n">yhat</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
@@ -13473,7 +13433,7 @@ TSS = 0.00016
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">R2</span> <span class="o">=</span> <span class="n">RSS</span><span class="o">/</span><span class="n">TSS</span>
@@ -13513,7 +13473,7 @@ TSS = 0.00016
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#predict displacement in 15 years</span>
@@ -13557,7 +13517,7 @@ TSS = 0.00016
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">pisa</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span>
@@ -13582,6 +13542,83 @@ TSS = 0.00016
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>s2b1 = 9.605e-10
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><br></p>
+<h3 id="Summary-of-Error-Metrics:">Summary of Error Metrics:<a class="anchor-link" href="#Summary-of-Error-Metrics:">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">linearfit</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                   lean   R-squared:                       0.988
+Model:                            OLS   Adj. R-squared:                  0.987
+Method:                 Least Squares   F-statistic:                     904.1
+Date:                Sat, 05 Jan 2019   Prob (F-statistic):           6.50e-12
+Time:                        14:40:39   Log-Likelihood:                 83.777
+No. Observations:                  13   AIC:                            -163.6
+Df Residuals:                      11   BIC:                            -162.4
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+const          1.1233      0.061     18.297      0.000       0.988       1.258
+year           0.0009    3.1e-05     30.069      0.000       0.001       0.001
+==============================================================================
+Omnibus:                        0.310   Durbin-Watson:                   1.642
+Prob(Omnibus):                  0.856   Jarque-Bera (JB):                0.450
+Skew:                           0.094   Prob(JB):                        0.799
+Kurtosis:                       2.108   Cond. No.                     1.05e+06
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 1.05e+06. This might indicate that there are
+strong multicollinearity or other numerical problems.
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/Users/BrunoHenriques/anaconda3/lib/python3.6/site-packages/scipy/stats/stats.py:1394: UserWarning: kurtosistest only valid for n&gt;=20 ... continuing anyway, n=13
+  &#34;anyway, n=%i&#34; % int(n))
 </pre>
 </div>
 </div>
