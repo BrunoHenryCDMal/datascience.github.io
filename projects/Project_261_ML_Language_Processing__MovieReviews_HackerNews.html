@@ -13143,7 +13143,7 @@ div#notebook {
 <li>Bag of words model + LinearRegression and RandomForestRegressor</li>
 </ul>
 </li>
-<li>Error Metric: accuracy_score</li>
+<li>Error Metric: accuracy_score + AUCROC</li>
 </ul>
 
 </div>
@@ -13159,7 +13159,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -13240,7 +13240,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Read in the training data</span>
@@ -13258,7 +13258,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Generate counts from text using a vectorizer  </span>
@@ -13282,6 +13282,13 @@ div#notebook {
 <span class="n">accuracy</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">test_target</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy: </span><span class="si">{:0.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">accuracy</span><span class="p">))</span>
+
+<span class="c1"># Generate the ROC curve using scikits-learn</span>
+<span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">roc_curve</span><span class="p">(</span><span class="n">test_target</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Measure the area under the curve</span>
+<span class="c1"># The closer to 1 it is, the &quot;better&quot; the predictions</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;AUC of the predictions: {metrics.auc(fpr, tpr):0.3f}&quot;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13299,6 +13306,7 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Accuracy: 0.635
+AUC of the predictions: 0.636
 </pre>
 </div>
 </div>
