@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>https://predictivelearning.github.io/</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects_visual.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects_ML.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects_SQL.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_041_Pandas_Plotting__Earnings_Based_On_College_Majors.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_031_Questionary_Data_with_Pandas__ThanksgivingStats.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_061_Cleaning_and_Visualizing_Data__SAT_results.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_011_Dictionaries_and_Visualizing_Data_Basic__BirthsUS.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_021_Dictionaries_and_Visualizing_Data_Basic__GunDeathsUS.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_051_Visualizing_Data__Gender_Gap.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_032_Questionary_Data_with_Pandas__StarWars.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_172_Cleaning_Data_and_String_Manipulation__Jeopardy.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_053_Visualizing_Data_with_Seaborn__Titanic.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_151_Data_Cleaning__Best_Markets_to_Advertise.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_141_Statistics__Analyzing_Movie_Reviews.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_171_Hypothesis_Testing.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_052_Visualizing_Geographic_data_with_Basemap_toolkit__Flight_routes.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_054_Visualizing_Geographic_data_with_Basemap_toolkit__EUROSTAT.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_251_ML_LogisticRegression_KNN_RandomForests__Titanic.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_235_ML_NN.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_201_ML_KNN_LR_RandomForestRegressor__Predicting_Car_Prices.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_221_ML_LogisticRegression_RandomForests__LendingClub.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_231_ML_LogisticRegression_Binary_and_MultiClassClassification__UniversityAdmissions_andCarOrigins.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_241_ML_DecisionTreeClassifier_RandomForestClassifier__Predict_Income_from_US_census.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_211_ML_KNN_LR__Predicting_House_Sale_Prices.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_242_ML_LinerRegression_DecisionTreeRegressor_RandomForestRegressor__PredictBikeRentals.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_232_ML_LinerRegression_SignificanceTesting__TowerofPisa.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_233_ML_LinearRegression_Overfitting__CarProperties.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_234_ML_Kmeans_clustering__SenatorVotes_andNBAplayers.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_261_ML_Language_Processing__MovieReviews_HackerNews.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_102_Data_from_Web_scraping__Xrates.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_124_SQLile_and_DBdesigner_Designing_and_Creating_a_Database__BaseaballStats.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_123_SQLite_Advanced_JOINS_and_Subqueries__Business_Questions.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_101_Data_from_Web_API__Reddit_using_OAuth.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_291_Spark__USCensus.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_111_SQLite_Basic_queries__CIAFactbook.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_112_SQLite_Upload_JOIN_AGG__CIA_FACTBOOK.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_121_SQLite_Clean_and_Upload_data__Academy_Awards.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://predictivelearning.github.io/projects/Project_122_SQLite_split_table_and_Create_Relations__Academy_Awards.html</loc>
+  <lastmod>2019-03-06T15:11:49+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+
+
+</urlset>
