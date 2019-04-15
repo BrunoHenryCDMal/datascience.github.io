@@ -13124,9 +13124,14 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br></p>
-<h2 id="Questions-to-address:">Questions to address:<a class="anchor-link" href="#Questions-to-address:">&#182;</a></h2><ul>
-<li>From the gpa scores predict if students were admited or not to University</li>
-<li>From data on the cylinders and yer built predict the orgin of cars (US, Europe or Asia)</li>
+<h2 id="Problem-1:">Problem 1:<a class="anchor-link" href="#Problem-1:">&#182;</a></h2><ul>
+<li>Predict if students were admitted to university from data on gpa scores</li>
+<li>Binary Classification with LogisticRegression
+<br></li>
+</ul>
+<h2 id="Problem-2:">Problem 2:<a class="anchor-link" href="#Problem-2:">&#182;</a></h2><ul>
+<li>Predict continent of origin from technical car properties: year built, cylinders, horsepower, weight, mpg, acceleration, etc</li>
+<li>MultiClass Classification (USA, Asia or Europe) with LogisticRegression + one-vs-all-method</li>
 </ul>
 
 </div>
@@ -13137,12 +13142,10 @@ div#notebook {
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br></p>
 <h2 id="Tools:">Tools:<a class="anchor-link" href="#Tools:">&#182;</a></h2><ul>
-<li>Models:<ul>
-<li>Logistic Regression</li>
-<li>Logistic Regression, one-versus-all Method </li>
-</ul>
-</li>
-<li>Error Metric: ROC_AUC, Accuracy, TPR, TNR, MCC</li>
+<li>Feature Engineering: deal with categorical variables (dummy coding)</li>
+<li>Models: LogisticRegression + one-vs-all-method</li>
+<li>Model validation and hyperparameter search: holdout validation (train-test validation by hand, test=0.3)</li>
+<li>Error Metrics: ROC_AUC, Accuracy, TPR, TNR, MCC</li>
 </ul>
 
 </div>

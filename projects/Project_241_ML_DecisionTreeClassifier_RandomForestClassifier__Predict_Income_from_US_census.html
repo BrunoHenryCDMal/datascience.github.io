@@ -13124,8 +13124,9 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br></p>
-<h2 id="Questions-to-address:">Questions to address:<a class="anchor-link" href="#Questions-to-address:">&#182;</a></h2><ul>
-<li>From the data on the US census, predict whether someone has a high income or not</li>
+<h2 id="Problem:">Problem:<a class="anchor-link" href="#Problem:">&#182;</a></h2><ul>
+<li>Predict if someone has high income or not from US census data: age, education, sex, race, occupation, etc</li>
+<li>Binary classification using DecisionTreeClassifier and RandomForestClassifier</li>
 </ul>
 
 </div>
@@ -13136,13 +13137,10 @@ div#notebook {
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br></p>
 <h2 id="Tools:">Tools:<a class="anchor-link" href="#Tools:">&#182;</a></h2><ul>
-<li>Models: <ul>
-<li>Decision Tree Classifier</li>
-<li>Random Forest Classifier</li>
-</ul>
-</li>
-<li>Error Metric: AUC (ideal for binary classification)</li>
-<li>Holdout Validation </li>
+<li>Feature Engineering: transform variables to categorical and reshuffle df </li>
+<li>Models: DecisionTreeClassifier and RandomForestClassifier</li>
+<li>Model validation and hyperparameter search: holdout validation (train-test validation by hand, test=0.2)</li>
+<li>Error Metrics: ROC_AUC</li>
 </ul>
 
 </div>

@@ -13124,9 +13124,9 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br></p>
-<h2 id="Questions-to-address:">Questions to address:<a class="anchor-link" href="#Questions-to-address:">&#182;</a></h2><ul>
-<li>Predict the outcome of loans given by the lending club to inform a conservative investor</li>
-<li>Dataset: lending club - stats on lenders and boorrowers (approved and declined loan applications)</li>
+<h2 id="Problem:">Problem:<a class="anchor-link" href="#Problem:">&#182;</a></h2><ul>
+<li>Predict outcome of lending club loans to inform conservative investor from: stats on lenders &amp; borrowers for approved and declined loan applications (loan amount, interest rate, employment length, income, installments)</li>
+<li>Binary Classification (loan payed or defaulted) using LogisticRegression and RandomForestClassifier</li>
 </ul>
 
 </div>
@@ -13137,21 +13137,12 @@ div#notebook {
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br></p>
 <h2 id="Tools:">Tools:<a class="anchor-link" href="#Tools:">&#182;</a></h2><ul>
-<li>Models: <ul>
-<li>Logistic Regression</li>
-<li>Random Forests  </li>
-</ul>
-</li>
 <li>Feature Preparation, Selection and Engineering (transforming and processing):<ul>
-<li>identify columns that leak information about the future, don't affect borrower's ability to pay the loan, need to be clean up, require a lot of processing, contain redundant information</li>
-<li>drop columns with only one unique value (after removing nan)</li>
-<li>handle missing values:<ul>
-<li>remove columns with more than 1% missing values, keep employment length as it is likely a good predictor</li>
-<li>drop rows with missing values</li>
-</ul>
-</li>
-<li>identify numerical needing conversion and extraneous columns</li>
-<li>dummy coding for categorical features<ul>
+<li>drop columns that leak information about the future, don't affect borrower's ability to pay the loan, need to be clean up, require a lot of processing, contain redundant information</li>
+<li>identify and clean the target colum (deal with inbalance in target with class_weight penalty)   </li>
+<li>identify numerical needing conversion   </li>
+<li>HMV: remove columns with more than 1% missing values, drop rows with missing values </li>
+<li>categorical features<ul>
 <li>transform numerical to categorical (for those where numbers have no meaning)</li>
 <li>identify text columns to make categorical:<ul>
 <li>only those with only a few unique values</li>
@@ -13161,11 +13152,12 @@ div#notebook {
 <li>deal with NaNs, then dummy code</li>
 </ul>
 </li>
-<li>identify and clean the target colum (lookout for class inbalance)  </li>
+<li>Feature Selection using RFECV</li>
 </ul>
 </li>
-<li>Error Metric: TPR and FPR  </li>
-<li>K-fold Validation and predictions</li>
+<li>Models: Logistic Regression, Random Forest Classifier </li>
+<li>Model validation and hyperparameter search: K-fold validation and predictions</li>
+<li>Error Metrics: TPR and FPR</li>
 </ul>
 
 </div>

@@ -13116,7 +13116,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Project:-ML---Neural-Networks">Project: ML - Neural Networks<a class="anchor-link" href="#Project:-ML---Neural-Networks">&#182;</a></h1>
+<h1 id="Project:-ML---Neural-Networks-(Flower-Type-&amp;-Wine-Cultivator)">Project: ML - Neural Networks (Flower Type &amp; Wine Cultivator)<a class="anchor-link" href="#Project:-ML---Neural-Networks-(Flower-Type-&amp;-Wine-Cultivator)">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -13124,9 +13124,14 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br></p>
-<h2 id="Questions-to-address:">Questions to address:<a class="anchor-link" href="#Questions-to-address:">&#182;</a></h2><ul>
-<li>Predict species of flower from a dataset with flower properties (binary classification problem)</li>
-<li>Predict cultivator from a dataset with wine properties (multiclass classification problem)</li>
+<h2 id="Problem-1-(Flower-Type):">Problem 1 (Flower Type):<a class="anchor-link" href="#Problem-1-(Flower-Type):">&#182;</a></h2><ul>
+<li>Predict species of flower from flower properties: sepal width and length, petal width and length</li>
+<li>Binary classification (only two species of flowers), using MLPClassifier (NN)
+<br></li>
+</ul>
+<h2 id="Problem-2-(Wine-Cultivator):">Problem 2 (Wine Cultivator):<a class="anchor-link" href="#Problem-2-(Wine-Cultivator):">&#182;</a></h2><ul>
+<li>Predict cultivator from wine properties (data: alcohol, malic acid, color intensity, hue, magnesium, etc)</li>
+<li>Multiclass classification (3 cultivators), using MLPClassifier (NN)</li>
 </ul>
 
 </div>
@@ -13137,14 +13142,10 @@ div#notebook {
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br></p>
 <h2 id="Tools:">Tools:<a class="anchor-link" href="#Tools:">&#182;</a></h2><ul>
-<li>Models:<ul>
-<li>NNT3 Algorithm</li>
-<li>MLPClassifier</li>
-</ul>
-</li>
+<li>Feature Engineering: rescale StandardScaler rescaling and reshuffle df </li>
+<li>Models: NNT3 Algorithm, MLPClassifier</li>
+<li>Model validation: holdout validation (train_test_split (default, test=0.25))</li>
 <li>Error Metric: AUC, classification_report, confusion_matrix</li>
-<li>StandardScaler</li>
-<li>train_test_split</li>
 </ul>
 
 </div>
@@ -13226,15 +13227,7 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br></p>
-<h2 id="ML-model:-Neural-Networks-with-MLPClassifier">ML model: Neural Networks with MLPClassifier<a class="anchor-link" href="#ML-model:-Neural-Networks-with-MLPClassifier">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><br></p>
-<h2 id="Dataset:-flower-properties">Dataset: flower properties<a class="anchor-link" href="#Dataset:-flower-properties">&#182;</a></h2>
+<h2 id="Problem-1:-Predict-Flower-Type-from-flower-properties">Problem 1: Predict Flower Type from flower properties<a class="anchor-link" href="#Problem-1:-Predict-Flower-Type-from-flower-properties">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -13592,7 +13585,7 @@ AUC: 0.917
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br></p>
-<h2 id="Dataset:-Predict-cultivator-from-Wine-properties">Dataset: Predict cultivator from Wine properties<a class="anchor-link" href="#Dataset:-Predict-cultivator-from-Wine-properties">&#182;</a></h2>
+<h2 id="Problem-2:-Predict-cultivator-from-Wine-properties">Problem 2: Predict cultivator from Wine properties<a class="anchor-link" href="#Problem-2:-Predict-cultivator-from-Wine-properties">&#182;</a></h2>
 </div>
 </div>
 </div>

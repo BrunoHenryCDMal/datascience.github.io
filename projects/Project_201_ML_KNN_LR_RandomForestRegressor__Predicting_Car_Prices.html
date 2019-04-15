@@ -13124,9 +13124,9 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br></p>
-<h2 id="Questions-to-address:">Questions to address:<a class="anchor-link" href="#Questions-to-address:">&#182;</a></h2><ul>
-<li>Predict car prices using a KNN ML algorithm</li>
-<li>For each car we have information about the technical aspects of the vehicle such as the motor's displacement, the weight of the car, the miles per gallon, how fast the car accelerates, and more.</li>
+<h2 id="Problem:">Problem:<a class="anchor-link" href="#Problem:">&#182;</a></h2><ul>
+<li>Predict car prices from car technical properties: horsepower, car weight, mpg, acceleration, etc)</li>
+<li>Regression using KNN, Multivariate LinearRegression and RandomForestRegressor</li>
 </ul>
 
 </div>
@@ -13137,33 +13137,15 @@ div#notebook {
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br></p>
 <h2 id="Tools:">Tools:<a class="anchor-link" href="#Tools:">&#182;</a></h2><ul>
-<li>KNN model<ul>
-<li>algorithm = auto</li>
-<li>p = 2 (euclidean distance)</li>
-<li>rmse as metric</li>
+<li>Feature Engineering: <ul>
+<li>transforming and processing: replace '?' with Nan, convert some to float, drop rows with NaN in target column</li>
+<li>HMD (inputation), Min_max rescaling and reshuffle df</li>
+<li>Selection: one feature at a time, combinations of the best individual features, RFECV </li>
 </ul>
 </li>
-<li>Feature Preparation, Selection and Engineering<ul>
-<li>transforming and processing: <ul>
-<li>identify numeric columns</li>
-<li>replace '?' with Nan</li>
-<li>convert some to float</li>
-<li>drop cols with NaN in target column</li>
-<li>replace NaNs with mean from other rows</li>
-<li>normalize features</li>
-</ul>
-</li>
-<li>selection: <ul>
-<li>one feature at a time</li>
-<li>different combinations of the best individual features</li>
-</ul>
-</li>
-<li>RFECV feature selection (10 folds)</li>
-</ul>
-</li>
-<li>Hyperparameter Optimization (on the k_neighbours value of the KNN algorithm)</li>
-<li>K-fold Validation</li>
-<li>K-fold predict</li>
+<li>Models: KNN (algorithm = auto, p = 2 (euclidean distance)), Multivariate LinearRegression and RandomForestRegressor</li>
+<li>Model validation and hyperparameter search: K-fold validation and predictions, Mean and std of rmse kfold validation as bias vs variance estimate, hyperparameter optimization for k_neighbours on KNN by hand</li>
+<li>Error Metrics: RMSE</li>
 </ul>
 
 </div>

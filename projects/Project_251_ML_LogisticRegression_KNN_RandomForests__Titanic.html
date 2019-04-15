@@ -13124,8 +13124,9 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br></p>
-<h2 id="Questions-to-address:">Questions to address:<a class="anchor-link" href="#Questions-to-address:">&#182;</a></h2><ul>
-<li>Predict survival from data on Titanic passengers</li>
+<h2 id="Problem:">Problem:<a class="anchor-link" href="#Problem:">&#182;</a></h2><ul>
+<li>Predict which passengers survived the Titanic from data on age, sex, number of siblings, ticket class, etc</li>
+<li>Binary Classification (survived or not), using LogisticRegression, KNeighborsClassifier and RandomForestClassifier.</li>
 </ul>
 
 </div>
@@ -13136,21 +13137,15 @@ div#notebook {
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br></p>
 <h2 id="Tools:">Tools:<a class="anchor-link" href="#Tools:">&#182;</a></h2><ul>
-<li>Models: <ul>
-<li>Logistic Regression</li>
-<li>K-nearest neighbors</li>
-<li>Random Forests  </li>
-</ul>
-</li>
 <li>Feature Preparation, Selection and Engineering:<ul>
-<li>fill NaNs with mean or top value</li>
-<li>bin data to create new categories using pd.cut()</li>
-<li>extract data from text columns</li>
-<li>create dummies</li>
-<li>RFECV feature selection</li>
+<li>HMD (inputation): fill NaNs with mean or top value </li>
+<li>extract data from text columns and create new categories using pd.cut()</li>
+<li>deal with categorical variables + dummy coding</li>
+<li>RFECV feature selection and heatmap</li>
 </ul>
 </li>
-<li>Model selection with GridSearchCV </li>
+<li>Models: LogisticRegression, KNeighborsClassifier, RandomForestClassifier</li>
+<li>Model validation and hyperparameter search: GridSearchCV</li>
 <li>Error Metric: ROC_AUC and Accuracy</li>
 </ul>
 
@@ -13167,7 +13162,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -13238,7 +13233,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data/titanic_train.csv&#39;</span><span class="p">)</span>
@@ -13343,7 +13338,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">process_missing</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
@@ -13429,7 +13424,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train</span> <span class="o">=</span> <span class="n">process_columns</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
@@ -13531,7 +13526,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;Relatives&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="s1">&#39;SibSp&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">train</span><span class="p">[</span><span class="s1">&#39;Parch&#39;</span><span class="p">]</span>
@@ -13584,7 +13579,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">is_alone</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
@@ -13686,7 +13681,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_new</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">])</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -13741,7 +13736,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">select_features</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>    
@@ -13800,7 +13795,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">corr</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="n">optimized_columns</span><span class="p">]</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
@@ -13883,7 +13878,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">select_model</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">features_list</span><span class="p">):</span>
@@ -13911,7 +13906,7 @@ div#notebook {
              <span class="p">},</span>
              <span class="p">{</span>
                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;RandomForestClassifier&quot;</span><span class="p">,</span>
-               <span class="s2">&quot;estimator&quot;</span><span class="p">:</span> <span class="n">RandomForestClassifier</span><span class="p">(),</span>
+               <span class="s2">&quot;estimator&quot;</span><span class="p">:</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
                <span class="s2">&quot;hyperparameters&quot;</span><span class="p">:</span> 
                  <span class="p">{</span>
                    <span class="s2">&quot;n_estimators&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span>
@@ -13983,10 +13978,10 @@ Best Score: 0.863
 
 RandomForestClassifier
 ----------------------
-AUC: 0.877
-Accuracy: 0.840
-Best Parameters: {&#39;criterion&#39;: &#39;gini&#39;, &#39;max_depth&#39;: 5, &#39;max_features&#39;: &#39;sqrt&#39;, &#39;min_samples_leaf&#39;: 1, &#39;min_samples_split&#39;: 2, &#39;n_estimators&#39;: 9}
-Best Score: 0.877
+AUC: 0.880
+Accuracy: 0.836
+Best Parameters: {&#39;criterion&#39;: &#39;gini&#39;, &#39;max_depth&#39;: 10, &#39;max_features&#39;: &#39;sqrt&#39;, &#39;min_samples_leaf&#39;: 5, &#39;min_samples_split&#39;: 2, &#39;n_estimators&#39;: 6}
+Best Score: 0.880
 
 
 model selection finished
