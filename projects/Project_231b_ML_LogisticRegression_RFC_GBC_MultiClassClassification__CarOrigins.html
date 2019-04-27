@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>Project_221_ML_LogisticRegression_RandomForests__LendingClub</title>
+<title>Project_231b_ML_LogisticRegression_RFC_GBC_MultiClassClassification__CarOrigins</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13116,17 +13116,16 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Project:-ML---Logistic-Regression,-Random-Forests-(Lending-Club)">Project: ML - Logistic Regression, Random Forests (Lending Club)<a class="anchor-link" href="#Project:-ML---Logistic-Regression,-Random-Forests-(Lending-Club)">&#182;</a></h1>
+<h1 id="Project:-ML---Logistic-Regression,-One-versus-all-Method-for-MultiClass-Classification-+-RFC-&amp;-GBC-(Car-Origins)">Project: ML - Logistic Regression, One-versus-all Method for MultiClass Classification + RFC &amp; GBC (Car Origins)<a class="anchor-link" href="#Project:-ML---Logistic-Regression,-One-versus-all-Method-for-MultiClass-Classification-+-RFC-&amp;-GBC-(Car-Origins)">&#182;</a></h1>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><br></p>
 <h2 id="Problem:">Problem:<a class="anchor-link" href="#Problem:">&#182;</a></h2><ul>
-<li>Predict outcome of lending club loans to inform conservative investor from: stats on lenders &amp; borrowers for approved and declined loan applications (loan amount, interest rate, employment length, income, installments)</li>
-<li>Binary Classification (loan payed or defaulted) using LogisticRegression, KNNClassifier and RandomForestClassifier</li>
+<li>Predict continent of origin from technical car properties: year built, cylinders, horsepower, weight, mpg, acceleration, etc</li>
+<li>MultiClass Classification (USA - 1, Europe - 2 or Asia - 3) with LogisticRegression + one-vs-all-method, RandomForestClassifier &amp; GradientBoostingClassifier</li>
 </ul>
 
 </div>
@@ -13137,28 +13136,10 @@ div#notebook {
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br></p>
 <h2 id="Tools:">Tools:<a class="anchor-link" href="#Tools:">&#182;</a></h2><ul>
-<li>Feature Preparation, Selection and Engineering (transforming and processing):<ul>
-<li>drop columns that leak information about the future, don't affect borrower's ability to pay the loan, need to be clean up, require a lot of processing, contain redundant information</li>
-<li>identify and clean the target colum (deal with inbalance in target with class_weight penalty)   </li>
-<li>identify numerical needing conversion   </li>
-<li>HMV: remove columns with more than 1% missing values, drop rows with missing values </li>
-<li>categorical features<ul>
-<li>transform numerical to categorical (for those where numbers have no meaning)</li>
-<li>identify text columns to make categorical:<ul>
-<li>only those with only a few unique values</li>
-<li>remove low varianve columns (more than 95% of the values are the same)</li>
-</ul>
-</li>
-<li>deal with NaNs, then dummy code</li>
-</ul>
-</li>
-<li>reshufle DF</li>
-<li>Feature Selection using RFECV</li>
-</ul>
-</li>
-<li>Models: Logistic Regression, KNN, Random Forest Classifier </li>
+<li>Feature Engineering: Dummy coding, RFECV</li>
+<li>Models: LogisticRegression + one-vs-all-method, RandomForestClassifier &amp; GradientBoostingClassifier</li>
 <li>Model validation and hyperparameter search: GridSearchCV, K-fold validation and predictions</li>
-<li>Error Metrics: TPR and FPR, f1_score, recall_score, precision_score, accuracy and ROC_AUC</li>
+<li>Error Metrics: Accuracy, TPR, TNR, MCC, classification_report, confusion_matrix</li>
 </ul>
 
 </div>
@@ -13174,7 +13155,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[103]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -13192,6 +13173,7 @@ div#notebook {
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="k">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">Math</span>
 
 <span class="kn">from</span> <span class="nn">functions</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">myML_functions</span> <span class="k">as</span> <span class="nn">myML_functions</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;axes.titlepad&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="s1">&#39;axes.titlesize&#39;</span><span class="p">:</span><span class="mi">20</span><span class="p">})</span>
 
@@ -13206,11 +13188,10 @@ div#notebook {
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">GridSearchCV</span><span class="p">,</span> <span class="n">KFold</span><span class="p">,</span> <span class="n">cross_val_predict</span>
 
 <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="k">import</span> <span class="n">LogisticRegression</span>
-<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">RandomForestClassifier</span>
-<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="k">import</span> <span class="n">KNeighborsClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">RandomForestClassifier</span><span class="p">,</span> <span class="n">GradientBoostingClassifier</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">make_scorer</span><span class="p">,</span> <span class="n">f1_score</span><span class="p">,</span> <span class="n">recall_score</span><span class="p">,</span> <span class="n">precision_score</span>
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">classification_report</span><span class="p">,</span> <span class="n">confusion_matrix</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">make_scorer</span><span class="p">,</span> <span class="n">f1_score</span><span class="p">,</span> <span class="n">recall_score</span><span class="p">,</span> <span class="n">precision_score</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Defaults Loaded&quot;</span><span class="p">)</span>
 </pre></div>
@@ -13242,18 +13223,72 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br></p>
-<h2 id="Dataset:-Lending-Club-stats">Dataset: Lending Club stats<a class="anchor-link" href="#Dataset:-Lending-Club-stats">&#182;</a></h2>
+<h2 id="Dataset:-car-properties-and-continent-of-origin">Dataset: car properties and continent of origin<a class="anchor-link" href="#Dataset:-car-properties-and-continent-of-origin">&#182;</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[77]:</div>
+<div class="prompt input_prompt">In&nbsp;[37]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">loans</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data/loans_2007.csv&#39;</span><span class="p">,</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">display</span><span class="p">(</span><span class="n">loans</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">3</span><span class="p">,:</span><span class="mi">13</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of Columns: </span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">loans</span><span class="o">.</span><span class="n">columns</span><span class="p">)))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cars</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/auto.csv&quot;</span><span class="p">)</span>
+
+<span class="c1">#find unique values</span>
+<span class="n">unique_regions</span> <span class="o">=</span> <span class="n">cars</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cars</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>1    245
+3     79
+2     68
+Name: origin, dtype: int64
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>dummy coding</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#categoric columns: cylinders, year, origin</span>
+
+<span class="c1">#set prefix</span>
+<span class="n">dummy_cylinders</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">cars</span><span class="p">[</span><span class="s2">&quot;cylinders&quot;</span><span class="p">],</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;cyl&quot;</span><span class="p">)</span>
+<span class="n">cars</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">cars</span><span class="p">,</span> <span class="n">dummy_cylinders</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">dummy_years</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">cars</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">],</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;year&#39;</span><span class="p">)</span>
+<span class="n">cars</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">cars</span><span class="p">,</span> <span class="n">dummy_years</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">cars</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;cylinders&#39;</span><span class="p">,</span><span class="s1">&#39;year&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">cars</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">3</span><span class="p">,:</span><span class="mi">15</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -13289,69 +13324,77 @@ div#notebook {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>id</th>
-      <th>member_id</th>
-      <th>loan_amnt</th>
-      <th>funded_amnt</th>
-      <th>funded_amnt_inv</th>
-      <th>term</th>
-      <th>int_rate</th>
-      <th>installment</th>
-      <th>grade</th>
-      <th>sub_grade</th>
-      <th>emp_title</th>
-      <th>emp_length</th>
-      <th>home_ownership</th>
+      <th>mpg</th>
+      <th>displacement</th>
+      <th>horsepower</th>
+      <th>weight</th>
+      <th>acceleration</th>
+      <th>origin</th>
+      <th>cyl_3</th>
+      <th>cyl_4</th>
+      <th>cyl_5</th>
+      <th>cyl_6</th>
+      <th>cyl_8</th>
+      <th>year_70</th>
+      <th>year_71</th>
+      <th>year_72</th>
+      <th>year_73</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>1077501</td>
-      <td>1296599.0</td>
-      <td>5000.0</td>
-      <td>5000.0</td>
-      <td>4975.0</td>
-      <td>36 months</td>
-      <td>10.65%</td>
-      <td>162.87</td>
-      <td>B</td>
-      <td>B2</td>
-      <td>NaN</td>
-      <td>10+ years</td>
-      <td>RENT</td>
+      <td>18.0</td>
+      <td>307.0</td>
+      <td>130.0</td>
+      <td>3504.0</td>
+      <td>12.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>1077430</td>
-      <td>1314167.0</td>
-      <td>2500.0</td>
-      <td>2500.0</td>
-      <td>2500.0</td>
-      <td>60 months</td>
-      <td>15.27%</td>
-      <td>59.83</td>
-      <td>C</td>
-      <td>C4</td>
-      <td>Ryder</td>
-      <td>&lt; 1 year</td>
-      <td>RENT</td>
+      <td>15.0</td>
+      <td>350.0</td>
+      <td>165.0</td>
+      <td>3693.0</td>
+      <td>11.5</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>1077175</td>
-      <td>1313524.0</td>
-      <td>2400.0</td>
-      <td>2400.0</td>
-      <td>2400.0</td>
-      <td>36 months</td>
-      <td>15.96%</td>
-      <td>84.33</td>
-      <td>C</td>
-      <td>C5</td>
-      <td>NaN</td>
-      <td>10+ years</td>
-      <td>RENT</td>
+      <td>18.0</td>
+      <td>318.0</td>
+      <td>150.0</td>
+      <td>3436.0</td>
+      <td>11.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
     </tr>
   </tbody>
 </table>
@@ -13360,13 +13403,51 @@ div#notebook {
 
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>shuffle rows and split into train and test</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[100]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">shuffled_cars</span> <span class="o">=</span> <span class="n">cars</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cars</span><span class="p">))]</span>
+
+<span class="n">train</span> <span class="o">=</span> <span class="n">shuffled_cars</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.7</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">shuffled_cars</span><span class="p">))]</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">shuffled_cars</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="mf">0.7</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">shuffled_cars</span><span class="p">)):]</span>
+
+<span class="n">df_clean</span> <span class="o">=</span> <span class="n">shuffled_cars</span>
+<span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;origin&#39;</span>
+<span class="n">target_df</span> <span class="o">=</span> <span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;done&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
 <div class="output_area">
 
     <div class="prompt"></div>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Number of Columns: 52
+<pre>done
 </pre>
 </div>
 </div>
@@ -13379,33 +13460,8 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br></p>
-<h2 id="1---Feature-Preparation,-Selection-and-Engineering:">1-  Feature Preparation, Selection and Engineering:<a class="anchor-link" href="#1---Feature-Preparation,-Selection-and-Engineering:">&#182;</a></h2><ul>
-<li>identify and clean the target colum (lookout for class inbalance)</li>
-<li>identify columns that:<ul>
-<li>leak information about the future (after he loan was funded)</li>
-<li>don't affect the borrower's ability to pay back the loan</li>
-<li>formatted poorly and need to be clean up</li>
-<li>require more data or a lot of processing</li>
-<li>contain redundant information</li>
-</ul>
-</li>
-<li>drop columns with only one unique value (after removing nan)</li>
-<li>handle missing values:<ul>
-<li>remove columns with more than 1% missing values, keep employment length as it is likely a good predictor</li>
-<li>drop rows with missing values</li>
-</ul>
-</li>
-<li>identify numerical needing conversion and extraneous columns</li>
-<li>dummy coding for categorical features<ul>
-<li>transform numerical to categorical (for those where numbers have no meaning)</li>
-<li>identify text columns to make categorical:<ul>
-<li>only those with only a few unique values</li>
-<li>remove low varianve columns (more than 95% of the values are the same)</li>
-</ul>
-</li>
-<li>deal with NaNs, then dummy code</li>
-</ul>
-</li>
+<h2 id="1---Logistic-Regression-Model:-One-versus-all-method">1 - Logistic Regression Model: One-versus-all method<a class="anchor-link" href="#1---Logistic-Regression-Model:-One-versus-all-method">&#182;</a></h2><ul>
+<li>Logistic Regression outputs a probability value (that a given row should be labeled 1). In binary classification we can set a threshold and assign 1 to probability values above and 0 below. treshold = 0.5 in LogisticRegression by default</li>
 </ul>
 
 </div>
@@ -13414,83 +13470,53 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>target column</strong></p>
+<p><strong>One versus all method for Multiclass Classification:</strong> choose one category as the positive case and group all others in the False case</p>
 <ul>
-<li>loan_status is the only column that describes if the loan was paid in time, delayed or defaulted</li>
-<li>it contains text values and needs to be converted to numerical</li>
+<li>convert the problem into n binary classification problems</li>
+<li>train 3 models: <ul>
+<li>cars made in America = 1, Europe and Asia = 0</li>
+<li>cars made in Europe = 1, America and Asia = 0</li>
+<li>cars made in Asia = 1, America and Europe = 0</li>
 </ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[78]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">loans</span><span class="p">[</span><span class="s1">&#39;loan_status&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Fully Paid                                             33136
-Charged Off                                             5634
-Does not meet the credit policy. Status:Fully Paid      1988
-Current                                                  961
-Does not meet the credit policy. Status:Charged Off      761
-Late (31-120 days)                                        24
-In Grace Period                                           20
-Late (16-30 days)                                          8
-Default                                                    3
-Name: loan_status, dtype: int64
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>only fully paid and charged off characterize loans with a final outcome (the others are ongoing)</p>
-<ul>
-<li>select only rows wih loan_status - fully paid or charged off</li>
-<li>assign fully paid to 1 and charged of to 0, then we can have a binary classification problem</li>
+</li>
 </ul>
+<p>then, for each observations choose the model the label (prediction) with highest probability</p>
 
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="1.1---Fit-model">1.1 - Fit model<a class="anchor-link" href="#1.1---Fit-model">&#182;</a></h3>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[79]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sel</span> <span class="o">=</span> <span class="p">(</span><span class="n">loans</span><span class="p">[</span><span class="s1">&#39;loan_status&#39;</span><span class="p">]</span><span class="o">==</span> <span class="s1">&#39;Fully Paid&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">loans</span><span class="p">[</span><span class="s1">&#39;loan_status&#39;</span><span class="p">]</span><span class="o">==</span> <span class="s1">&#39;Charged Off&#39;</span><span class="p">)</span>
-<span class="n">loans</span> <span class="o">=</span> <span class="n">loans</span><span class="p">[</span><span class="n">sel</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">unique_origins</span> <span class="o">=</span> <span class="n">cars</span><span class="p">[</span><span class="s2">&quot;origin&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+<span class="n">unique_origins</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
 
-<span class="n">mapping_dict</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;loan_status&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;Charged Off&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;Fully Paid&quot;</span><span class="p">:</span> <span class="mi">1</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-<span class="n">loans</span> <span class="o">=</span> <span class="n">loans</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">mapping_dict</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">loans</span><span class="p">[</span><span class="s1">&#39;loan_status&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+<span class="n">models</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c1">#train model just with year and cylinder dummy columns</span>
+<span class="n">cols</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">columns</span>
+<span class="n">cols_to_keep</span> <span class="o">=</span> <span class="p">(</span><span class="n">cols</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;cyl&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">cols</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;year&#39;</span><span class="p">))</span>
+
+<span class="n">testing_probs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">unique_origins</span><span class="p">)</span>
+
+<span class="c1">#train on train set</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="n">cols</span><span class="p">[</span><span class="n">cols_to_keep</span><span class="p">]]</span>
+<span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">unique_origins</span><span class="p">:</span>
+    <span class="c1">#select only rows with current label</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">element</span>
+    <span class="n">models</span><span class="p">[</span><span class="n">element</span><span class="p">]</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s1">&#39;lbfgs&#39;</span><span class="p">)</span>
+    <span class="n">models</span><span class="p">[</span><span class="n">element</span><span class="p">]</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;models fitted&quot;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13507,9 +13533,7 @@ Name: loan_status, dtype: int64
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>1    33136
-0     5634
-Name: loan_status, dtype: int64
+<pre>models fitted
 </pre>
 </div>
 </div>
@@ -13518,106 +13542,17 @@ Name: loan_status, dtype: int64
 </div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>class inbalance in the target column</strong>, keep in mind</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>clean features</p>
-
-</div>
-</div>
-</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[80]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cols_to_drop</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;member_id&#39;</span><span class="p">,</span> <span class="s1">&#39;funded_amnt&#39;</span><span class="p">,</span> <span class="s1">&#39;funded_amnt_inv&#39;</span><span class="p">,</span> <span class="s1">&#39;grade&#39;</span><span class="p">,</span> <span class="s1">&#39;sub_grade&#39;</span><span class="p">,</span> <span class="s1">&#39;emp_title&#39;</span><span class="p">,</span> 
-                <span class="s1">&#39;issue_d&#39;</span><span class="p">,</span> <span class="s1">&#39;zip_code&#39;</span><span class="p">,</span> <span class="s1">&#39;out_prncp&#39;</span><span class="p">,</span> <span class="s1">&#39;out_prncp_inv&#39;</span><span class="p">,</span> <span class="s1">&#39;total_pymnt&#39;</span><span class="p">,</span> <span class="s1">&#39;total_pymnt_inv&#39;</span><span class="p">,</span> 
-                <span class="s1">&#39;total_rec_prncp&#39;</span><span class="p">,</span> <span class="s1">&#39;total_rec_int&#39;</span><span class="p">,</span> <span class="s1">&#39;total_rec_late_fee&#39;</span><span class="p">,</span> <span class="s1">&#39;recoveries&#39;</span><span class="p">,</span> 
-                <span class="s1">&#39;collection_recovery_fee&#39;</span><span class="p">,</span> <span class="s1">&#39;last_pymnt_d&#39;</span><span class="p">,</span> <span class="s1">&#39;last_pymnt_amnt&#39;</span><span class="p">]</span>
-<span class="n">loans</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">cols_to_drop</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">loans</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
-
-
-<span class="c1">#drop columns with only one unique value (after removing nan)</span>
-<span class="n">drop_columns</span> <span class="o">=</span> <span class="p">[]</span>
-
-<span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">loans</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-    <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">loans</span><span class="p">[</span><span class="n">element</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
-        <span class="n">drop_columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
-        
-<span class="n">loans</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">drop_columns</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">loans</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
-
-<span class="c1">#remove columns with more than 1% missing values (keep employment length as it is likely a good predictor)</span>
-<span class="n">null_counts</span> <span class="o">=</span> <span class="n">loans</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-<span class="c1">#print(null_counts[null_counts&gt;len(loans)*0.01])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">null_counts</span><span class="p">[</span><span class="n">null_counts</span><span class="o">&gt;</span><span class="mf">0.</span><span class="p">])</span>
-<span class="n">loans</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;pub_rec_bankruptcies&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="c1">#drop rows with missing values</span>
-<span class="n">loans</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">null_counts</span> <span class="o">=</span> <span class="n">loans</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-<span class="c1">#print(null_counts[null_counts&gt;0])</span>
-
-<span class="c1">#write file</span>
-<span class="n">loans</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;./data/filtered_loans_2007.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>32
-23
-emp_length              1036
-title                     11
-revol_util                50
-last_credit_pull_d         2
-pub_rec_bankruptcies     697
-dtype: int64
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>identify numerical needing conversion and extraneous columns</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[81]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">loans</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data/filtered_loans_2007.csv&#39;</span><span class="p">)</span>
-<span class="n">object_columns_df</span> <span class="o">=</span> <span class="n">loans</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;object&#39;</span><span class="p">])</span>
-<span class="n">display</span><span class="p">(</span><span class="n">object_columns_df</span><span class="p">[:</span><span class="mi">1</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#predict</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">test</span><span class="p">[</span><span class="n">cols</span><span class="p">[</span><span class="n">cols_to_keep</span><span class="p">]]</span>    
+<span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">unique_origins</span><span class="p">:</span>
+    <span class="n">testing_probs</span><span class="p">[</span><span class="n">element</span><span class="p">]</span><span class="o">=</span><span class="n">models</span><span class="p">[</span><span class="n">element</span><span class="p">]</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">y</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">]</span>
+    
+<span class="n">display</span><span class="p">(</span><span class="n">testing_probs</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -13653,33 +13588,41 @@ dtype: int64
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>term</th>
-      <th>int_rate</th>
-      <th>emp_length</th>
-      <th>home_ownership</th>
-      <th>verification_status</th>
-      <th>purpose</th>
-      <th>title</th>
-      <th>addr_state</th>
-      <th>earliest_cr_line</th>
-      <th>revol_util</th>
-      <th>last_credit_pull_d</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>36 months</td>
-      <td>10.65%</td>
-      <td>10+ years</td>
-      <td>RENT</td>
-      <td>Verified</td>
-      <td>credit_card</td>
-      <td>Computer</td>
-      <td>AZ</td>
-      <td>Jan-1985</td>
-      <td>83.7%</td>
-      <td>Jun-2016</td>
+      <td>0.958401</td>
+      <td>0.035453</td>
+      <td>0.018950</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.979050</td>
+      <td>0.013642</td>
+      <td>0.023675</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.277985</td>
+      <td>0.356383</td>
+      <td>0.351180</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.983759</td>
+      <td>0.013213</td>
+      <td>0.018183</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.340172</td>
+      <td>0.261673</td>
+      <td>0.377821</td>
     </tr>
   </tbody>
 </table>
@@ -13694,19 +13637,42 @@ dtype: int64
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[82]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#convert to numeric:</span>
-<span class="n">loans</span><span class="p">[</span><span class="s1">&#39;int_rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">loans</span><span class="p">[</span><span class="s1">&#39;int_rate&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;%&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-<span class="n">loans</span><span class="p">[</span><span class="s1">&#39;revol_util&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">loans</span><span class="p">[</span><span class="s1">&#39;revol_util&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;%&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-
-<span class="c1">#remove extraneous</span>
-<span class="n">cols_to_drop</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;last_credit_pull_d&#39;</span><span class="p">,</span> <span class="s1">&#39;earliest_cr_line&#39;</span><span class="p">]</span>
-<span class="n">loans</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">cols_to_drop</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">predicted_origins</span> <span class="o">=</span> <span class="n">testing_probs</span><span class="o">.</span><span class="n">idxmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cars</span><span class="p">[</span><span class="s1">&#39;predicted_label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">predicted_origins</span>
+<span class="n">cars</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;any&#39;</span><span class="p">)</span>
+<span class="n">cars</span><span class="p">[</span><span class="s1">&#39;predicted_label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cars</span><span class="p">[</span><span class="s1">&#39;predicted_label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">cars</span><span class="p">[</span><span class="s1">&#39;predicted_label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_text output_subarea ">
+<pre>0    1
+1    1
+2    2
+3    1
+4    3
+Name: predicted_label, dtype: int64</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -13714,68 +13680,30 @@ dtype: int64
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>dummy coding</strong>:</p>
-<ul>
-<li>home_ownership, verification_status, emp_length, term: few discrete values; encode as dummy</li>
-<li>purpose, title: overlaping information; keep purpose since title contains 18881 discrete values</li>
-<li>addr_state: 50 different values; remove</li>
-</ul>
+<p><br></p>
+<h3 id="1.2---Error-Metrics">1.2 - Error Metrics<a class="anchor-link" href="#1.2---Error-Metrics">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Accuracy</strong></p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[83]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#cols = [&#39;home_ownership&#39;, &#39;verification_status&#39;, &#39;emp_length&#39;, &#39;term&#39;, &#39;addr_state&#39;, &#39;purpose&#39;,&#39;title&#39;]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cars</span> <span class="o">=</span> <span class="n">cars</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;origin&#39;</span><span class="p">:</span> <span class="s1">&#39;actual_label&#39;</span><span class="p">})</span>
+<span class="n">matches</span> <span class="o">=</span> <span class="n">cars</span><span class="p">[</span><span class="s1">&#39;actual_label&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">cars</span><span class="p">[</span><span class="s1">&#39;predicted_label&#39;</span><span class="p">]</span>
+<span class="n">correct_predictions</span> <span class="o">=</span> <span class="n">cars</span><span class="p">[</span><span class="n">matches</span><span class="p">]</span>
 
-<span class="c1">#for element in cols:    </span>
-<span class="c1">#    print(len(object_columns_df[element].value_counts()))</span>
-<span class="c1">#    print(object_columns_df[element].value_counts()[:5])</span>
-<span class="c1">#    print(&#39;\n&#39;)</span>
-
-<span class="c1">#drop &#39;addr_state&#39; and &#39;title&#39;</span>
-<span class="n">cols_to_drop</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;addr_state&#39;</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">]</span>
-<span class="n">loans</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">cols_to_drop</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="c1">#map emp_length</span>
-<span class="n">mapping_dict</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;emp_length&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;10+ years&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-        <span class="s2">&quot;9 years&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
-        <span class="s2">&quot;8 years&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-        <span class="s2">&quot;7 years&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
-        <span class="s2">&quot;6 years&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
-        <span class="s2">&quot;5 years&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-        <span class="s2">&quot;4 years&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-        <span class="s2">&quot;3 years&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-        <span class="s2">&quot;2 years&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="s2">&quot;1 year&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;&lt; 1 year&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;n/a&quot;</span><span class="p">:</span> <span class="mi">0</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-<span class="n">loans</span> <span class="o">=</span> <span class="n">loans</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">mapping_dict</span><span class="p">)</span>
-
-<span class="c1">#dummy code &#39;home_ownership&#39;, &#39;verification_status&#39;, &#39;purpose&#39; and &#39;term&#39;</span>
-<span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;home_ownership&#39;</span><span class="p">,</span> <span class="s1">&#39;verification_status&#39;</span><span class="p">,</span> <span class="s1">&#39;purpose&#39;</span><span class="p">,</span> <span class="s1">&#39;term&#39;</span><span class="p">]</span>
-<span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
-    <span class="n">loans</span><span class="p">[</span><span class="n">element</span><span class="p">]</span> <span class="o">=</span> <span class="n">loans</span><span class="p">[</span><span class="n">element</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span>
-
-<span class="n">dummy_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">loans</span><span class="p">[</span><span class="n">cols</span><span class="p">])</span>
-<span class="n">loans</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">loans</span><span class="p">,</span> <span class="n">dummy_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">loans</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">loans</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
-
-<span class="c1">#Shuffle DF</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> 
-<span class="n">loans</span> <span class="o">=</span> <span class="n">loans</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">loans</span><span class="p">))]</span>
-
-<span class="c1">#write file</span>
-<span class="n">loans</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;./data/cleaned_loans_2007.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">accuracy</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">correct_predictions</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">cars</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy = </span><span class="si">{:0.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">accuracy</span><span class="p">))</span>
 </pre></div>
 
     </div>
@@ -13792,7 +13720,195 @@ dtype: int64
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>38
+<pre>Accuracy = 0.492
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Recall/Sensitivity(True Positive Rate)</strong>, $TPR = \frac{True\,Positives}{True\,Positives+False\,Negatives}$</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">true_positives</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">element</span> <span class="ow">in</span>  <span class="n">cars</span><span class="p">[</span><span class="s2">&quot;actual_label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="n">my_filter</span> <span class="o">=</span> <span class="p">(</span><span class="n">cars</span><span class="p">[</span><span class="s2">&quot;predicted_label&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">element</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">cars</span><span class="p">[</span><span class="s2">&quot;actual_label&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">element</span><span class="p">)</span>
+    <span class="n">true_positives</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cars</span><span class="p">[</span><span class="n">my_filter</span><span class="p">])</span>
+    
+<span class="n">false_negatives</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">element</span> <span class="ow">in</span>  <span class="n">cars</span><span class="p">[</span><span class="s2">&quot;actual_label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="n">my_filter</span> <span class="o">=</span> <span class="p">(</span><span class="n">cars</span><span class="p">[</span><span class="s2">&quot;predicted_label&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">element</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">cars</span><span class="p">[</span><span class="s2">&quot;actual_label&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">element</span><span class="p">)</span>
+    <span class="n">false_negatives</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cars</span><span class="p">[</span><span class="n">my_filter</span><span class="p">])</span>    
+    
+<span class="n">sensitivity</span> <span class="o">=</span> <span class="p">(</span><span class="n">true_positives</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">true_positives</span><span class="o">+</span><span class="n">false_negatives</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sensitivity = </span><span class="si">{:0.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sensitivity</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Sensitivity = 0.492
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Specificity (True Negative rate)</strong>, $TNR = \frac{True\,Negatives}{False\,Positives+True\,Negatives}$</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">true_negatives</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">element</span> <span class="ow">in</span>  <span class="n">cars</span><span class="p">[</span><span class="s2">&quot;actual_label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="n">my_filter</span> <span class="o">=</span> <span class="p">(</span><span class="n">cars</span><span class="p">[</span><span class="s2">&quot;predicted_label&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">element</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">cars</span><span class="p">[</span><span class="s2">&quot;actual_label&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">element</span><span class="p">)</span>
+    <span class="n">true_negatives</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cars</span><span class="p">[</span><span class="n">my_filter</span><span class="p">])</span>
+    
+<span class="n">false_positives</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">element</span> <span class="ow">in</span>  <span class="n">cars</span><span class="p">[</span><span class="s2">&quot;actual_label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="n">my_filter</span> <span class="o">=</span> <span class="p">(</span><span class="n">cars</span><span class="p">[</span><span class="s2">&quot;predicted_label&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">element</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">cars</span><span class="p">[</span><span class="s2">&quot;actual_label&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">element</span><span class="p">)</span>
+    <span class="n">false_positives</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cars</span><span class="p">[</span><span class="n">my_filter</span><span class="p">])</span>  
+    
+<span class="n">specificity</span> <span class="o">=</span> <span class="n">true_negatives</span><span class="o">/</span><span class="p">(</span><span class="n">true_negatives</span><span class="o">+</span><span class="n">false_positives</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Specificity = </span><span class="si">{:0.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">specificity</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Specificity = 0.746
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Matthew's Correlation Coefficient</strong>, $MCC = \frac{TP.TN-FP.FN}{\sqrt{(TP+FP)(TP+FN)(TN+FP)(TN+FN)}}$</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">MCC</span> <span class="o">=</span> <span class="p">((</span><span class="n">true_positives</span><span class="o">*</span><span class="n">true_negatives</span><span class="o">-</span><span class="n">false_positives</span><span class="o">*</span><span class="n">false_negatives</span><span class="p">)</span><span class="o">/</span>
+       <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">true_positives</span><span class="o">+</span><span class="n">false_positives</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">true_positives</span><span class="o">+</span><span class="n">false_negatives</span><span class="p">)</span><span class="o">*</span>
+        <span class="p">(</span><span class="n">true_negatives</span><span class="o">+</span><span class="n">false_positives</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">true_negatives</span><span class="o">+</span><span class="n">false_negatives</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MCC = </span><span class="si">{:0.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">MCC</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>MCC = 0.237
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">cars</span><span class="p">[</span><span class="s1">&#39;actual_label&#39;</span><span class="p">],</span><span class="n">cars</span><span class="p">[</span><span class="s1">&#39;predicted_label&#39;</span><span class="p">]))</span>
+<span class="n">cm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">cars</span><span class="p">[</span><span class="s1">&#39;actual_label&#39;</span><span class="p">],</span> <span class="n">cars</span><span class="p">[</span><span class="s1">&#39;predicted_label&#39;</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="n">myML_functions</span><span class="o">.</span><span class="n">print_cm</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;USA (1)&#39;</span><span class="p">,</span> <span class="s1">&#39;Europe (2)&#39;</span><span class="p">,</span> <span class="s1">&#39; Asia (3)&#39;</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>              precision    recall  f1-score   support
+
+           1       0.75      0.62      0.68        86
+           2       0.11      0.17      0.13        18
+           3       0.10      0.14      0.12        14
+
+   micro avg       0.49      0.49      0.49       118
+   macro avg       0.32      0.31      0.31       118
+weighted avg       0.57      0.49      0.53       118
+
+    true / pred    USA (1) Europe (2)   Asia (3) 
+       USA (1)       53.0       19.0       14.0 
+    Europe (2)       11.0        3.0        4.0 
+      Asia (3)        7.0        5.0        2.0 
 </pre>
 </div>
 </div>
@@ -13805,59 +13921,23 @@ dtype: int64
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br></p>
-<h2 id="2---RFECV-for-Logistic-Regression-&amp;-Random-Forest-Classifier">2 - RFECV for Logistic Regression &amp; Random Forest Classifier<a class="anchor-link" href="#2---RFECV-for-Logistic-Regression-&amp;-Random-Forest-Classifier">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>load cleaned data:</p>
-
+<h2 id="2---Feature-Selection-with-RFECV">2 - Feature Selection with RFECV<a class="anchor-link" href="#2---Feature-Selection-with-RFECV">&#182;</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[49]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">loans</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data/cleaned_loans_2007.csv&#39;</span><span class="p">)</span>
-
-<span class="n">feature_columns</span> <span class="o">=</span> <span class="n">loans</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;loan_status&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-<span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;loan_status&#39;</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[60]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">select_features</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>    
-    <span class="c1">#select numeric and drop NaNs</span>
-    <span class="n">df_new</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">])</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="c1">#drop survived and ID</span>
-    <span class="n">all_X</span> <span class="o">=</span> <span class="n">df_new</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">target</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">all_y</span> <span class="o">=</span> <span class="n">df_new</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
-        
-    <span class="c1">#cv is the number of folds</span>
-    <span class="n">selector</span> <span class="o">=</span> <span class="n">RFECV</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-    <span class="n">selector</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">all_X</span><span class="p">,</span> <span class="n">all_y</span><span class="p">)</span>  
-    <span class="n">optimized_columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">all_X</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">selector</span><span class="o">.</span><span class="n">support_</span><span class="p">])</span>
-    
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best Columns </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span><span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="mi">12</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">optimized_columns</span><span class="p">))</span>    
-    <span class="k">return</span> <span class="n">optimized_columns</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">solver</span> <span class="o">=</span> <span class="s1">&#39;lbfgs&#39;</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="s1">&#39;balanced&#39;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="n">multi_class</span><span class="o">=</span><span class="s1">&#39;ovr&#39;</span><span class="p">)</span>
+<span class="n">optimized_columns_LR</span> <span class="o">=</span> <span class="n">myML_functions</span><span class="o">.</span><span class="n">select_features_RFECV</span><span class="p">(</span><span class="n">df_clean</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="s1">&#39;balanced&#39;</span><span class="p">)</span>
-<span class="n">optimized_columns_RFC</span> <span class="o">=</span> <span class="n">select_features</span><span class="p">(</span><span class="n">loans</span><span class="p">[:</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">loans</span><span class="p">)</span><span class="o">/</span><span class="mf">5.</span><span class="p">)],</span> <span class="n">target</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="n">optimized_columns_RFC</span> <span class="o">=</span> <span class="n">myML_functions</span><span class="o">.</span><span class="n">select_features_RFECV</span><span class="p">(</span><span class="n">df_clean</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">solver</span> <span class="o">=</span> <span class="s1">&#39;lbfgs&#39;</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="s1">&#39;balanced&#39;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">3000</span><span class="p">)</span>
-<span class="n">optimized_columns_LR</span> <span class="o">=</span> <span class="n">select_features</span><span class="p">(</span><span class="n">loans</span><span class="p">[:</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">loans</span><span class="p">)</span><span class="o">/</span><span class="mf">5.</span><span class="p">)],</span> <span class="n">target</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span><span class="n">subsample</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>  
+<span class="n">optimized_columns_GBC</span> <span class="o">=</span> <span class="n">myML_functions</span><span class="o">.</span><span class="n">select_features_RFECV</span><span class="p">(</span><span class="n">df_clean</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13874,13 +13954,17 @@ dtype: int64
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Best Columns 
-------------
-[&#39;loan_amnt&#39;, &#39;int_rate&#39;, &#39;installment&#39;, &#39;annual_inc&#39;, &#39;dti&#39;, &#39;open_acc&#39;, &#39;revol_bal&#39;, &#39;revol_util&#39;, &#39;total_acc&#39;, &#39;term_ 60 months&#39;]
+<pre>Best Columns, LogisticRegression model: [&#39;mpg&#39;, &#39;displacement&#39;, &#39;horsepower&#39;, &#39;weight&#39;, &#39;acceleration&#39;, &#39;cyl_3&#39;, &#39;cyl_4&#39;, &#39;cyl_5&#39;, &#39;cyl_6&#39;, &#39;cyl_8&#39;, &#39;year_70&#39;, &#39;year_71&#39;, &#39;year_72&#39;, &#39;year_73&#39;, &#39;year_74&#39;, &#39;year_75&#39;, &#39;year_76&#39;, &#39;year_77&#39;, &#39;year_78&#39;, &#39;year_79&#39;, &#39;year_80&#39;, &#39;year_81&#39;, &#39;year_82&#39;]
 
-Best Columns 
-------------
-[&#39;term_ 36 months&#39;]
+----------------------------------------------------
+
+Best Columns, RandomForestClassifier model: [&#39;mpg&#39;, &#39;displacement&#39;, &#39;horsepower&#39;, &#39;weight&#39;, &#39;acceleration&#39;, &#39;cyl_4&#39;]
+
+----------------------------------------------------
+
+Best Columns, GradientBoostingClassifier model: [&#39;mpg&#39;, &#39;displacement&#39;, &#39;horsepower&#39;, &#39;weight&#39;, &#39;acceleration&#39;, &#39;cyl_3&#39;, &#39;cyl_4&#39;, &#39;cyl_5&#39;, &#39;cyl_6&#39;, &#39;year_82&#39;]
+
+----------------------------------------------------
 
 </pre>
 </div>
@@ -13900,35 +13984,20 @@ Best Columns
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[85]:</div>
+<div class="prompt input_prompt">In&nbsp;[151]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="k">import</span> <span class="n">UndefinedMetricWarning</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">UndefinedMetricWarning</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">select_model</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">features_list</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">models_to_fit</span><span class="p">):</span>    
-    
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">select_model</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">models_to_fit</span><span class="p">):</span>                              
+                              
     <span class="n">dicts</span><span class="o">=</span> <span class="p">[</span> <span class="p">{</span>
                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;LogisticRegression&quot;</span><span class="p">,</span>
-               <span class="s2">&quot;estimator&quot;</span><span class="p">:</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">max_iter</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">),</span>
+               <span class="s2">&quot;estimator&quot;</span><span class="p">:</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">max_iter</span> <span class="o">=</span> <span class="mi">100000</span><span class="p">,</span> <span class="n">multi_class</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">),</span>
                <span class="s2">&quot;hyperparameters&quot;</span><span class="p">:</span> 
                  <span class="p">{</span>                
-                   <span class="s2">&quot;solver&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;newton-cg&quot;</span><span class="p">,</span> <span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="s2">&quot;liblinear&quot;</span><span class="p">],</span>  
+                   <span class="s2">&quot;solver&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="s2">&quot;liblinear&quot;</span><span class="p">],</span>  
                    <span class="s2">&quot;class_weight&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;balanced&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>                      
                  <span class="p">}</span>
-             <span class="p">},</span>
-             <span class="p">{</span>
-               <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;KNeighborsClassifier&quot;</span><span class="p">,</span>
-               <span class="s2">&quot;estimator&quot;</span><span class="p">:</span> <span class="n">KNeighborsClassifier</span><span class="p">(),</span>
-               <span class="s2">&quot;hyperparameters&quot;</span><span class="p">:</span> 
-                 <span class="p">{</span>
-                   <span class="s2">&quot;n_neighbors&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span>
-                   <span class="s2">&quot;weights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;distance&quot;</span><span class="p">,</span> <span class="s2">&quot;uniform&quot;</span><span class="p">],</span>
-                   <span class="s2">&quot;algorithm&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ball_tree&quot;</span><span class="p">,</span> <span class="s2">&quot;kd_tree&quot;</span><span class="p">,</span> <span class="s2">&quot;brute&quot;</span><span class="p">],</span>
-                   <span class="s2">&quot;p&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
-                 <span class="p">}</span>
-             <span class="p">},</span>
+             <span class="p">},</span>             
              <span class="p">{</span>
                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;RandomForestClassifier&quot;</span><span class="p">,</span>
                <span class="s2">&quot;estimator&quot;</span><span class="p">:</span> <span class="n">RandomForestClassifier</span><span class="p">(),</span>
@@ -13940,51 +14009,76 @@ Best Columns
                    <span class="s2">&quot;max_features&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;log2&quot;</span><span class="p">,</span> <span class="s2">&quot;sqrt&quot;</span><span class="p">],</span>
                    <span class="s2">&quot;min_samples_leaf&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
                    <span class="s2">&quot;min_samples_split&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> 
-                   <span class="s2">&quot;class_weight&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;balanced&quot;</span><span class="p">,</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">1</span><span class="p">}]</span>               
+                   <span class="s2">&quot;class_weight&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;balanced&quot;</span><span class="p">]</span>               
                  <span class="p">}</span>
-             <span class="p">}</span> <span class="p">]</span>    
+             <span class="p">},</span>
+             <span class="p">{</span>
+               <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;GradientBoostingClassifier&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;estimator&quot;</span><span class="p">:</span> <span class="n">GradientBoostingClassifier</span><span class="p">(),</span>
+               <span class="s2">&quot;hyperparameters&quot;</span><span class="p">:</span> 
+                 <span class="p">{</span>
+                   <span class="s2">&quot;n_estimators&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>  
+                   <span class="s2">&quot;max_features&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;log2&quot;</span><span class="p">,</span> <span class="s2">&quot;sqrt&quot;</span><span class="p">],</span>
+                   <span class="s2">&quot;learning_rate&quot;</span><span class="p">:[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+                   <span class="s2">&quot;subsample&quot;</span><span class="p">:[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>  
+                   <span class="s2">&quot;random_state&quot;</span><span class="p">:[</span><span class="mi">1</span><span class="p">]</span>     
+                 <span class="p">}</span>
+             <span class="p">}]</span>    
     
-    <span class="n">scoring</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ROC_AUC&#39;</span><span class="p">:</span><span class="s1">&#39;roc_auc&#39;</span><span class="p">,</span> <span class="s1">&#39;Accuracy&#39;</span><span class="p">:</span><span class="s1">&#39;accuracy&#39;</span><span class="p">,</span> 
-               <span class="s1">&#39;precision_1&#39;</span><span class="p">:</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">precision_score</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
-               <span class="s1">&#39;recall_1&#39;</span><span class="p">:</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">recall_score</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
-               <span class="s1">&#39;f1_1&#39;</span><span class="p">:</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">f1_score</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
-               <span class="s1">&#39;precision_0&#39;</span><span class="p">:</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">precision_score</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-               <span class="s1">&#39;recall_0&#39;</span><span class="p">:</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">recall_score</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-               <span class="s1">&#39;f1_0&#39;</span><span class="p">:</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">f1_score</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">0</span><span class="p">)}</span>
+    <span class="n">scoring</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Accuracy&#39;</span><span class="p">:</span><span class="s1">&#39;accuracy&#39;</span><span class="p">,</span> 
+               <span class="s1">&#39;precision&#39;</span><span class="p">:</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">precision_score</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">&#39;weighted&#39;</span><span class="p">),</span>
+               <span class="s1">&#39;recall&#39;</span><span class="p">:</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">recall_score</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">&#39;weighted&#39;</span><span class="p">),</span>
+               <span class="s1">&#39;f1&#39;</span><span class="p">:</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">f1_score</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">&#39;weighted&#39;</span><span class="p">)}</span>
     
     <span class="n">all_y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">dicts</span><span class="p">:</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">models_to_fit</span><span class="p">):</span>
-            <span class="k">continue</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]))</span>
+    
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">models_list</span> <span class="ow">in</span> <span class="n">models_to_fit</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>        
+        <span class="nb">print</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">dicts</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">models_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">element</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]:</span>                
+                <span class="n">all_X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">models_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>              
+                <span class="n">model</span> <span class="o">=</span> <span class="n">element</span><span class="p">[</span><span class="s1">&#39;estimator&#39;</span><span class="p">]</span>
+                <span class="n">grid</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">element</span><span class="p">[</span><span class="s1">&#39;hyperparameters&#39;</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span> 
+                                    <span class="n">refit</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">,</span> <span class="n">iid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">grid</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">all_X</span><span class="p">,</span> <span class="n">all_y</span><span class="p">)</span>
         
-        <span class="n">all_X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">features_list</span><span class="p">[</span><span class="n">element</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]]</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">element</span><span class="p">[</span><span class="s1">&#39;estimator&#39;</span><span class="p">]</span>
-        <span class="n">grid</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">element</span><span class="p">[</span><span class="s1">&#39;hyperparameters&#39;</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="s1">&#39;ROC_AUC&#39;</span><span class="p">,</span> <span class="n">iid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">grid</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">all_X</span><span class="p">,</span> <span class="n">all_y</span><span class="p">)</span>
+                <span class="n">element</span><span class="p">[</span><span class="s1">&#39;best_params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">best_params_</span>
+                <span class="n">element</span><span class="p">[</span><span class="s1">&#39;best_score&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">best_score_</span>
+                <span class="n">element</span><span class="p">[</span><span class="s1">&#39;best_estimator&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">best_estimator_</span>          
+                <span class="k">for</span> <span class="n">scorer</span> <span class="ow">in</span> <span class="n">scoring</span><span class="p">:</span>          
+                    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{scorer}</span><span class="s2">: {max(grid.cv_results_[&#39;mean_test_&#39;+scorer]):0.3f}&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best Parameters: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">best_params_</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best Score: </span><span class="si">{:0.3f}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">best_score_</span><span class="p">))</span>
         
-        <span class="n">element</span><span class="p">[</span><span class="s1">&#39;best_params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">best_params_</span>
-        <span class="n">element</span><span class="p">[</span><span class="s1">&#39;best_score&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">best_score_</span>
-        <span class="n">element</span><span class="p">[</span><span class="s1">&#39;best_estimator&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">best_estimator_</span>          
-        <span class="k">for</span> <span class="n">scorer</span> <span class="ow">in</span> <span class="n">scoring</span><span class="p">:</span>          
-            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{scorer}</span><span class="s2">: {max(grid.cv_results_[&#39;mean_test_&#39;+scorer]):0.3f}&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best Parameters: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">best_params_</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best Score: </span><span class="si">{:0.3f}</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">best_score_</span><span class="p">))</span>
-        
-        
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Time elapsed: {(time.time()-start)/60.:0.2f} mins</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="c1">#for scorer in scoring:</span>
         <span class="c1">#    print(cv_results_&#39;_&lt;scorer_name&gt;&#39;)</span>
        
     <span class="k">return</span> <span class="n">dicts</span>
-        
-<span class="n">models_to_fit</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;LogisticRegression&#39;</span><span class="p">,</span><span class="s1">&#39;KNeighborsClassifier&#39;</span><span class="p">,</span><span class="s1">&#39;RandomForestClassifier&#39;</span><span class="p">]</span>
-<span class="n">optimized_columns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;LogisticRegression&#39;</span><span class="p">:</span> <span class="n">optimized_columns_LR</span><span class="p">,</span> 
-                     <span class="s1">&#39;KNeighborsClassifier&#39;</span><span class="p">:</span> <span class="n">optimized_columns_LR</span><span class="p">,</span> 
-                     <span class="s1">&#39;RandomForestClassifier&#39;</span><span class="p">:</span> <span class="n">optimized_columns_RFC</span><span class="p">}</span>
- 
-<span class="n">model_dicts</span> <span class="o">=</span> <span class="n">select_model</span><span class="p">(</span><span class="n">loans</span><span class="p">[:</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">loans</span><span class="p">)</span><span class="o">/</span><span class="mf">10.</span><span class="p">)],</span> <span class="n">optimized_columns</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">models_to_fit</span><span class="p">)</span>
+</pre></div>
 
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[152]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="k">import</span> <span class="n">UndefinedMetricWarning</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">UndefinedMetricWarning</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">time</span>
+  
+<span class="n">models_to_fit</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;LogisticRegression&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;LogisticRegression&#39;</span><span class="p">,</span> <span class="n">optimized_columns_LR</span><span class="p">],</span>                    
+                 <span class="s1">&#39;RandomForestClassifier&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;RandomForestClassifier&#39;</span><span class="p">,</span> <span class="n">optimized_columns_RFC</span><span class="p">],</span>
+                 <span class="s1">&#39;GradientBoostingClassifier&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;GradientBoostingClassifier&#39;</span><span class="p">,</span> <span class="n">optimized_columns_GBC</span><span class="p">]}</span>
+
+<span class="n">model_dicts</span> <span class="o">=</span> <span class="n">select_model</span><span class="p">(</span><span class="n">df_clean</span><span class="p">[:</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df_clean</span><span class="p">))],</span> <span class="n">target</span><span class="p">,</span> <span class="n">models_to_fit</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;model selection finished&quot;</span><span class="p">)</span>
 </pre></div>
@@ -14005,44 +14099,38 @@ Best Columns
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>LogisticRegression
 ------------------
-ROC_AUC: 0.615
-Accuracy: 0.853
-precision_1: 0.891
-recall_1: 1.000
-f1_1: 0.920
-precision_0: 0.262
-recall_0: 0.447
-f1_0: 0.330
-Best Parameters: {&#39;class_weight&#39;: &#39;balanced&#39;, &#39;solver&#39;: &#39;newton-cg&#39;}
-Best Score: 0.615
+Accuracy: 0.765
+precision: 0.800
+recall: 0.765
+f1: 0.769
+Best Parameters: {&#39;class_weight&#39;: &#39;balanced&#39;, &#39;solver&#39;: &#39;liblinear&#39;}
+Best Score: 0.769
 
-
-KNeighborsClassifier
---------------------
-ROC_AUC: 0.615
-Accuracy: 0.853
-precision_1: 0.864
-recall_1: 1.000
-f1_1: 0.920
-precision_0: 0.076
-recall_0: 0.134
-f1_0: 0.097
-Best Parameters: {&#39;algorithm&#39;: &#39;brute&#39;, &#39;n_neighbors&#39;: 19, &#39;p&#39;: 1, &#39;weights&#39;: &#39;distance&#39;}
-Best Score: 0.615
+Time elapsed: 0.23 mins
 
 
 RandomForestClassifier
 ----------------------
-ROC_AUC: 0.699
-Accuracy: 0.854
-precision_1: 0.909
-recall_1: 1.000
-f1_1: 0.921
-precision_0: 0.588
-recall_0: 0.591
-f1_0: 0.364
-Best Parameters: {&#39;class_weight&#39;: &#39;balanced&#39;, &#39;criterion&#39;: &#39;entropy&#39;, &#39;max_depth&#39;: 5, &#39;max_features&#39;: &#39;log2&#39;, &#39;min_samples_leaf&#39;: 8, &#39;min_samples_split&#39;: 2, &#39;n_estimators&#39;: 20}
-Best Score: 0.699
+Accuracy: 0.890
+precision: 0.900
+recall: 0.890
+f1: 0.887
+Best Parameters: {&#39;class_weight&#39;: None, &#39;criterion&#39;: &#39;entropy&#39;, &#39;max_depth&#39;: 10, &#39;max_features&#39;: &#39;log2&#39;, &#39;min_samples_leaf&#39;: 1, &#39;min_samples_split&#39;: 2, &#39;n_estimators&#39;: 100}
+Best Score: 0.887
+
+Time elapsed: 13.87 mins
+
+
+GradientBoostingClassifier
+--------------------------
+Accuracy: 0.852
+precision: 0.863
+recall: 0.852
+f1: 0.849
+Best Parameters: {&#39;learning_rate&#39;: 0.5, &#39;max_features&#39;: &#39;auto&#39;, &#39;n_estimators&#39;: 10, &#39;random_state&#39;: 1, &#39;subsample&#39;: 1.0}
+Best Score: 0.849
+
+Time elapsed: 0.63 mins
 
 
 model selection finished
@@ -14064,33 +14152,22 @@ model selection finished
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[86]:</div>
+<div class="prompt input_prompt">In&nbsp;[153]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">kf</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-<span class="n">best_model</span> <span class="o">=</span>  <span class="p">{</span><span class="s1">&#39;class_weight&#39;</span><span class="p">:</span> <span class="s1">&#39;balanced&#39;</span><span class="p">,</span> <span class="s1">&#39;criterion&#39;</span><span class="p">:</span> <span class="s1">&#39;entropy&#39;</span><span class="p">,</span> <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;max_features&#39;</span><span class="p">:</span> <span class="s1">&#39;log2&#39;</span><span class="p">,</span> 
-               <span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;min_samples_split&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">}</span>
+<span class="n">best_model</span> <span class="o">=</span>  <span class="p">{</span><span class="s1">&#39;class_weight&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;criterion&#39;</span><span class="p">:</span> <span class="s1">&#39;entropy&#39;</span><span class="p">,</span> <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;max_features&#39;</span><span class="p">:</span> <span class="s1">&#39;log2&#39;</span><span class="p">,</span> 
+               <span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;min_samples_split&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;n_jobs&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">()</span>
 <span class="n">model</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="n">best_model</span><span class="p">)</span>  
 
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">loans</span><span class="p">[</span><span class="n">optimized_columns_RFC</span><span class="p">],</span> <span class="n">loans</span><span class="p">[</span><span class="n">target</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="n">kf</span><span class="p">,</span> <span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df_clean</span><span class="p">[</span><span class="n">optimized_columns_RFC</span><span class="p">],</span> <span class="n">target_df</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">kf</span><span class="p">,</span> <span class="p">)</span>
 <span class="n">predictions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
 
-<span class="c1">#classification report</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">loans</span><span class="p">[</span><span class="n">target</span><span class="p">],</span><span class="n">predictions</span><span class="p">))</span>
-
-<span class="n">c_matrix</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">loans</span><span class="p">[</span><span class="n">target</span><span class="p">],</span><span class="n">predictions</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">c_matrix</span><span class="p">)</span>
-<span class="n">tp</span> <span class="o">=</span> <span class="n">c_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">fp</span> <span class="o">=</span> <span class="n">c_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">fn</span> <span class="o">=</span> <span class="n">c_matrix</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">tn</span> <span class="o">=</span> <span class="n">c_matrix</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
-
-<span class="n">tpr</span> <span class="o">=</span> <span class="n">tp</span><span class="o">/</span><span class="p">(</span><span class="n">tp</span><span class="o">+</span><span class="n">fn</span><span class="p">)</span>
-<span class="n">fpr</span> <span class="o">=</span> <span class="n">fp</span><span class="o">/</span><span class="p">(</span><span class="n">fp</span><span class="o">+</span><span class="n">tn</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;TPR:</span><span class="si">{:0.3f}</span><span class="s2">, FPR:</span><span class="si">{:0.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span> <span class="n">fpr</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">target_df</span><span class="p">,</span> <span class="n">predictions</span><span class="p">))</span>
+<span class="n">cm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">target_df</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="n">myML_functions</span><span class="o">.</span><span class="n">print_cm</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;USA (1)&#39;</span><span class="p">,</span> <span class="s1">&#39;Europe (2)&#39;</span><span class="p">,</span> <span class="s1">&#39; Asia (3)&#39;</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -14109,250 +14186,22 @@ model selection finished
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>              precision    recall  f1-score   support
 
-           0       0.22      0.64      0.33      5389
-           1       0.91      0.63      0.75     32286
+           1       0.92      0.93      0.92       245
+           2       0.79      0.68      0.73        68
+           3       0.80      0.87      0.84        79
 
-   micro avg       0.63      0.63      0.63     37675
-   macro avg       0.57      0.63      0.54     37675
-weighted avg       0.81      0.63      0.69     37675
+   micro avg       0.88      0.88      0.88       392
+   macro avg       0.84      0.83      0.83       392
+weighted avg       0.87      0.88      0.87       392
 
-[[ 3435  1954]
- [11878 20408]]
-TPR:0.224, FPR:0.087
+    true / pred    USA (1) Europe (2)   Asia (3) 
+       USA (1)      228.0       11.0        6.0 
+    Europe (2)       11.0       46.0       11.0 
+      Asia (3)        9.0        1.0       69.0 
 </pre>
 </div>
 </div>
 
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><br></p>
-<h2 id="5---Logistic-Regression-Model-with-different-weights">5 - Logistic Regression Model with different weights<a class="anchor-link" href="#5---Logistic-Regression-Model-with-different-weights">&#182;</a></h2><ul>
-<li>good first model for binary classification problems:<ul>
-<li>quick to train and we can iterate more quickly</li>
-<li>less prone to overfitting than more complex models like decision trees</li>
-<li>easy to interpret</li>
-</ul>
-</li>
-<li><strong>Error Metric</strong><ul>
-<li>In this problem we are mostly concerned with false positives (cost money) and false negatives (loose potential money)</li>
-<li>because of class inbalance a classifier can predict one for every row and still have high accuracy, use false positives and negatives</li>
-<li>optimize for high recall (true positive rate) and low fall-out (false positive rate):</li>
-<li>$TPR=\frac{\mathrm{True Positives}}{\mathrm{True Positives+False Negatives}}$</li>
-<li>$FPR=\frac{\mathrm{False Positives}}{\mathrm{False Positives+True Negatives}}$</li>
-</ul>
-</li>
-</ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Logistic-Regression-Model-with-kfold-predictions">Logistic Regression Model with kfold predictions<a class="anchor-link" href="#Logistic-Regression-Model-with-kfold-predictions">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">loans</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data/cleaned_loans_2007.csv&#39;</span><span class="p">)</span>
-
-<span class="n">features_df</span> <span class="o">=</span> <span class="n">loans</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;loan_status&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;loan_status&#39;</span>
-
-<span class="n">lr</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s1">&#39;lbfgs&#39;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">30000</span><span class="p">)</span>
-<span class="n">kf</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span><span class="n">lr</span><span class="p">,</span> <span class="n">features_df</span><span class="p">,</span> <span class="n">loans</span><span class="p">[</span><span class="n">target</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="n">kf</span><span class="p">)</span>
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
-
-<span class="n">tp</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">[(</span><span class="n">loans</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="mi">1</span><span class="p">)])</span>
-<span class="n">tn</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">[(</span><span class="n">loans</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="mi">0</span><span class="p">)])</span>
-<span class="n">fp</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">[(</span><span class="n">loans</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="mi">1</span><span class="p">)])</span>
-<span class="n">fn</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">[(</span><span class="n">loans</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="mi">0</span><span class="p">)])</span>
-
-<span class="n">tpr</span> <span class="o">=</span> <span class="n">tp</span><span class="o">/</span><span class="p">(</span><span class="n">tp</span><span class="o">+</span><span class="n">fn</span><span class="p">)</span>
-<span class="n">fpr</span> <span class="o">=</span> <span class="n">fp</span><span class="o">/</span><span class="p">(</span><span class="n">fp</span><span class="o">+</span><span class="n">tn</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;TPR:</span><span class="si">{:0.3f}</span><span class="s2">, FPR:</span><span class="si">{:0.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span> <span class="n">fpr</span><span class="p">))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>TPR:0.999, FPR:0.997
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Logistic-Regression-Model-with-class_weight='balanced'">Logistic Regression Model with class_weight='balanced'<a class="anchor-link" href="#Logistic-Regression-Model-with-class_weight='balanced'">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>correct for inbalance</strong> by penalizing misclassifications of the less prevalent class more than the other class:</p>
-<ul>
-<li>class_weight='balanced'</li>
-</ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">lr</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s1">&#39;lbfgs&#39;</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="s1">&#39;balanced&#39;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">3000</span><span class="p">)</span>
-<span class="c1">#cross validation accross all the rows of the training data (kfold=n, leave one out validation)</span>
-<span class="c1">#kf = KFold(features.shape[0], random_state=1)</span>
-<span class="n">kf</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span><span class="n">lr</span><span class="p">,</span> <span class="n">features_df</span><span class="p">,</span> <span class="n">loans</span><span class="p">[</span><span class="n">target</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="n">kf</span><span class="p">,</span> <span class="p">)</span>
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
-
-<span class="n">tp</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">[(</span><span class="n">loans</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="mi">1</span><span class="p">)])</span>
-<span class="n">tn</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">[(</span><span class="n">loans</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="mi">0</span><span class="p">)])</span>
-<span class="n">fp</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">[(</span><span class="n">loans</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="mi">1</span><span class="p">)])</span>
-<span class="n">fn</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">[(</span><span class="n">loans</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="mi">0</span><span class="p">)])</span>
-
-<span class="n">tpr</span> <span class="o">=</span> <span class="n">tp</span><span class="o">/</span><span class="p">(</span><span class="n">tp</span><span class="o">+</span><span class="n">fn</span><span class="p">)</span>
-<span class="n">fpr</span> <span class="o">=</span> <span class="n">fp</span><span class="o">/</span><span class="p">(</span><span class="n">fp</span><span class="o">+</span><span class="n">tn</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;TPR:</span><span class="si">{:0.3f}</span><span class="s2">, FPR:</span><span class="si">{:0.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span> <span class="n">fpr</span><span class="p">))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>TPR:0.540, FPR:0.334
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Logistic-Regression-Model-with-class_weight=penalty-dictionary">Logistic Regression Model with class_weight=penalty dictionary<a class="anchor-link" href="#Logistic-Regression-Model-with-class_weight=penalty-dictionary">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>setting class_wight to balanced assign a penalty of ~5.89 for misclassifying 0 (there as 5.89 times more 1's than 0's)</p>
-<ul>
-<li>we can <strong>set the penalty manually</strong> to try to lower the false positive rates (higher penalty for misclassifying the negative class)</li>
-</ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">penalty</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
-<span class="n">lr</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">solver</span> <span class="o">=</span> <span class="s1">&#39;lbfgs&#39;</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="n">penalty</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">3000</span><span class="p">)</span>
-<span class="c1">#kf = KFold(features.shape[0], random_state=1)</span>
-<span class="n">kf</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span><span class="n">lr</span><span class="p">,</span> <span class="n">features_df</span><span class="p">,</span> <span class="n">loans</span><span class="p">[</span><span class="n">target</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="n">kf</span><span class="p">,</span> <span class="p">)</span>
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
-
-<span class="n">tp</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">[(</span><span class="n">loans</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="mi">1</span><span class="p">)])</span>
-<span class="n">tn</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">[(</span><span class="n">loans</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="mi">0</span><span class="p">)])</span>
-<span class="n">fp</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">[(</span><span class="n">loans</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="mi">1</span><span class="p">)])</span>
-<span class="n">fn</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">[(</span><span class="n">loans</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="mi">0</span><span class="p">)])</span>
-
-<span class="n">tpr</span> <span class="o">=</span> <span class="n">tp</span><span class="o">/</span><span class="p">(</span><span class="n">tp</span><span class="o">+</span><span class="n">fn</span><span class="p">)</span>
-<span class="n">fpr</span> <span class="o">=</span> <span class="n">fp</span><span class="o">/</span><span class="p">(</span><span class="n">fp</span><span class="o">+</span><span class="n">tn</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;TPR:</span><span class="si">{:0.3f}</span><span class="s2">, FPR:</span><span class="si">{:0.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span> <span class="n">fpr</span><span class="p">))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>TPR:0.162, FPR:0.067
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>lower false positive rate at the expense of true positives</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-    </div>
 </div>
 </div>
 
