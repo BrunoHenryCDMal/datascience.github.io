@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>Project_241_ML_DecisionTreeClassifier_RandomForestClassifier__Predict_Income_from_US_census</title>
+<title>Project_241_ML_AllEnsembleClassifiers_GaussianNB__Predict_Income_from_US_census</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13089,7 +13089,7 @@ div#notebook {
 
 <!-- Loading mathjax macro -->
 <!-- Load mathjax -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS_HTML"></script>
     <!-- MathJax configuration -->
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -13116,7 +13116,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Project:-ML---Decision-Tree-Classifier,-Random-Forest-Classifier-(Predict-Income-from-US-census)">Project: ML - Decision Tree Classifier, Random Forest Classifier (Predict Income from US census)<a class="anchor-link" href="#Project:-ML---Decision-Tree-Classifier,-Random-Forest-Classifier-(Predict-Income-from-US-census)">&#182;</a></h1>
+<h1 id="Project:-ML---All-Ensemble-Classifiers-+-GaussianNB-&amp;-KNN-(Predict-Income-from-US-census)">Project: ML - All Ensemble Classifiers + GaussianNB &amp; KNN (Predict Income from US census)<a class="anchor-link" href="#Project:-ML---All-Ensemble-Classifiers-+-GaussianNB-&amp;-KNN-(Predict-Income-from-US-census)">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -13126,7 +13126,7 @@ div#notebook {
 <p><br></p>
 <h2 id="Problem:">Problem:<a class="anchor-link" href="#Problem:">&#182;</a></h2><ul>
 <li>Predict if someone has high income or not from US census data: age, education, sex, race, occupation, etc</li>
-<li>Binary classification using DecisionTreeClassifier and RandomForestClassifier</li>
+<li>Binary classification using all types of ensemble classifiers from sklearn + GaussianNB and KNN</li>
 </ul>
 
 </div>
@@ -13137,10 +13137,10 @@ div#notebook {
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br></p>
 <h2 id="Tools:">Tools:<a class="anchor-link" href="#Tools:">&#182;</a></h2><ul>
-<li>Feature Engineering: transform variables to categorical and reshuffle df </li>
-<li>Models: DecisionTreeClassifier and RandomForestClassifier</li>
-<li>Model validation and hyperparameter search: holdout validation (train-test validation by hand, test=0.2)</li>
-<li>Error Metrics: ROC_AUC</li>
+<li>Feature Engineering: transform variables to categorical and reshuffle df, RFECV </li>
+<li>Models: BaggingClassifier, RandomForestClassifier, ExtraTreesClassifier, AdaBoostClassifier, GradientBoostingClassifier, VotingClassifier, GaussianNB, DecisionTreeClassifier, LogisticRegression, KNeighborsClassifier</li>
+<li>Model validation and hyperparameter search: GridSearchCV</li>
+<li>Error Metrics: ROC_AUC, precision, recall, f1, classification_report &amp; confusion_matrix</li>
 </ul>
 
 </div>
@@ -13156,7 +13156,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[83]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -13164,6 +13164,7 @@ div#notebook {
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">requests</span> 
+<span class="kn">import</span> <span class="nn">time</span>
 
 <span class="o">%</span><span class="k">matplotlib</span> inline
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -13174,6 +13175,7 @@ div#notebook {
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="k">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">Math</span>
 
 <span class="kn">from</span> <span class="nn">functions</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">myML_functions</span> <span class="k">as</span> <span class="nn">myML_functions</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;axes.titlepad&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="s1">&#39;axes.titlesize&#39;</span><span class="p">:</span><span class="mi">20</span><span class="p">})</span>
 
@@ -13184,9 +13186,19 @@ div#notebook {
 
 
 <span class="c1">#specific to this project</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">classification_report</span><span class="p">,</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">roc_auc_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">make_scorer</span><span class="p">,</span> <span class="n">f1_score</span><span class="p">,</span> <span class="n">recall_score</span><span class="p">,</span> <span class="n">precision_score</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="k">import</span> <span class="n">RFECV</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">GridSearchCV</span><span class="p">,</span> <span class="n">KFold</span><span class="p">,</span> <span class="n">cross_val_predict</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">BaggingClassifier</span><span class="p">,</span> <span class="n">RandomForestClassifier</span><span class="p">,</span> <span class="n">ExtraTreesClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">AdaBoostClassifier</span><span class="p">,</span> <span class="n">GradientBoostingClassifier</span><span class="p">,</span> <span class="n">VotingClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.naive_bayes</span> <span class="k">import</span> <span class="n">GaussianNB</span>
 <span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="k">import</span> <span class="n">DecisionTreeClassifier</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">roc_auc_score</span>
-<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="k">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="k">import</span> <span class="n">KNeighborsClassifier</span>
+
 
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Defaults Loaded&quot;</span><span class="p">)</span>
@@ -13225,7 +13237,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[63]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Set index_col to False to avoid pandas thinking that the first column is row indexes (it&#39;s age)</span>
@@ -13314,22 +13326,6 @@ div#notebook {
       <td>0</td>
       <td>&lt;=50K</td>
     </tr>
-    <tr>
-      <th>2</th>
-      <td>38</td>
-      <td>Private</td>
-      <td>215646</td>
-      <td>HS-grad</td>
-      <td>9</td>
-      <td>Divorced</td>
-      <td>Handlers-cleaners</td>
-      <td>Not-in-family</td>
-      <td>White</td>
-      <td>Male</td>
-      <td>0</td>
-      <td>0</td>
-      <td>&lt;=50K</td>
-    </tr>
   </tbody>
 </table>
 </div>
@@ -13343,7 +13339,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[64]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Convert text categories to numbers</span>
@@ -13355,7 +13351,9 @@ div#notebook {
     <span class="n">col</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">income</span><span class="p">[</span><span class="n">element</span><span class="p">])</span>
     <span class="n">income</span><span class="p">[</span><span class="n">element</span><span class="p">]</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">codes</span>
 
-<span class="n">display</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">2</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+<span class="c1">#remove columns without interesting infomration information</span>
+<span class="n">income</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;fnlwgt&#39;</span><span class="p">,</span> <span class="s1">&#39;capital_gain&#39;</span><span class="p">,</span> <span class="s1">&#39;capital_loss&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">income</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -13393,7 +13391,6 @@ div#notebook {
       <th></th>
       <th>age</th>
       <th>workclass</th>
-      <th>fnlwgt</th>
       <th>education</th>
       <th>education_num</th>
       <th>marital_status</th>
@@ -13401,8 +13398,8 @@ div#notebook {
       <th>relationship</th>
       <th>race</th>
       <th>sex</th>
-      <th>capital_gain</th>
-      <th>capital_loss</th>
+      <th>hours_per_week</th>
+      <th>native_country</th>
       <th>high_income</th>
     </tr>
   </thead>
@@ -13411,7 +13408,6 @@ div#notebook {
       <th>0</th>
       <td>39</td>
       <td>7</td>
-      <td>77516</td>
       <td>9</td>
       <td>13</td>
       <td>4</td>
@@ -13419,15 +13415,14 @@ div#notebook {
       <td>1</td>
       <td>4</td>
       <td>1</td>
-      <td>2174</td>
-      <td>0</td>
+      <td>40</td>
+      <td>39</td>
       <td>0</td>
     </tr>
     <tr>
       <th>1</th>
       <td>50</td>
       <td>6</td>
-      <td>83311</td>
       <td>9</td>
       <td>13</td>
       <td>2</td>
@@ -13435,8 +13430,23 @@ div#notebook {
       <td>0</td>
       <td>4</td>
       <td>1</td>
+      <td>13</td>
+      <td>39</td>
       <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>38</td>
+      <td>4</td>
+      <td>11</td>
+      <td>9</td>
       <td>0</td>
+      <td>6</td>
+      <td>1</td>
+      <td>4</td>
+      <td>1</td>
+      <td>40</td>
+      <td>39</td>
       <td>0</td>
     </tr>
   </tbody>
@@ -13450,41 +13460,51 @@ div#notebook {
 </div>
 
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[65]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#columns to train with (all have been converted to numeric)</span>
+<span class="n">all_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="s2">&quot;workclass&quot;</span><span class="p">,</span> <span class="s2">&quot;education&quot;</span><span class="p">,</span> <span class="s2">&quot;education_num&quot;</span><span class="p">,</span> <span class="s2">&quot;marital_status&quot;</span><span class="p">,</span> <span class="s2">&quot;occupation&quot;</span><span class="p">,</span> 
+           <span class="s2">&quot;relationship&quot;</span><span class="p">,</span> <span class="s2">&quot;race&quot;</span><span class="p">,</span> <span class="s2">&quot;sex&quot;</span><span class="p">,</span> <span class="s2">&quot;hours_per_week&quot;</span><span class="p">,</span> <span class="s2">&quot;native_country&quot;</span><span class="p">]</span>
+<span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;high_income&#39;</span>
+
+<span class="c1"># Shuffle the rows  </span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">income</span> <span class="o">=</span> <span class="n">income</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">index</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br></p>
-<h3 id="Decision-Tree-Classifier-with-holdout-validation">Decision Tree Classifier with holdout validation<a class="anchor-link" href="#Decision-Tree-Classifier-with-holdout-validation">&#182;</a></h3>
+<h2 id="1---Decision-Tree-Classifier-with-holdout-validation-to-check-for-overfitting">1 - Decision Tree Classifier with holdout validation to check for overfitting<a class="anchor-link" href="#1---Decision-Tree-Classifier-with-holdout-validation-to-check-for-overfitting">&#182;</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[66]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#columns to train with (all have been converted to numeric)</span>
-<span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="s2">&quot;workclass&quot;</span><span class="p">,</span> <span class="s2">&quot;education_num&quot;</span><span class="p">,</span> <span class="s2">&quot;marital_status&quot;</span><span class="p">,</span> <span class="s2">&quot;occupation&quot;</span><span class="p">,</span> 
-           <span class="s2">&quot;relationship&quot;</span><span class="p">,</span> <span class="s2">&quot;race&quot;</span><span class="p">,</span> <span class="s2">&quot;sex&quot;</span><span class="p">,</span> <span class="s2">&quot;hours_per_week&quot;</span><span class="p">,</span> <span class="s2">&quot;native_country&quot;</span><span class="p">]</span>
-
-
-<span class="c1"># Shuffle the rows  </span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">income</span> <span class="o">=</span> <span class="n">income</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">index</span><span class="p">))</span>
-
-<span class="c1">#create train adn test set for holdout validation</span>
-<span class="n">train_max_row</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="o">.</span><span class="mi">8</span><span class="p">))</span>
-<span class="n">train</span> <span class="o">=</span> <span class="n">income</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">train_max_row</span><span class="p">]</span>
-<span class="n">test</span> <span class="o">=</span> <span class="n">income</span><span class="p">[</span><span class="n">train_max_row</span><span class="p">:]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#create train and test set for holdout validation</span>
+<span class="n">train</span> <span class="o">=</span> <span class="n">income</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">income</span><span class="p">)</span><span class="o">*</span><span class="mf">0.8</span><span class="p">)]</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">income</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">income</span><span class="p">)</span><span class="o">*</span><span class="mf">0.8</span><span class="p">):]</span>
 
 <span class="c1"># Instantiate the classifier (Set random_state to 1 to be able to replicate)</span>
 <span class="n">clf</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">columns</span><span class="p">],</span> <span class="n">train</span><span class="p">[</span><span class="s2">&quot;high_income&quot;</span><span class="p">])</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">all_columns</span><span class="p">],</span> <span class="n">train</span><span class="p">[</span><span class="s2">&quot;high_income&quot;</span><span class="p">])</span>
 
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="n">columns</span><span class="p">])</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="n">all_columns</span><span class="p">])</span>
 <span class="n">test_auc</span> <span class="o">=</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s1">&#39;high_income&#39;</span><span class="p">],</span> <span class="n">predictions</span><span class="p">)</span>
 
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">columns</span><span class="p">])</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">all_columns</span><span class="p">])</span>
 <span class="n">train_auc</span> <span class="o">=</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;high_income&#39;</span><span class="p">],</span> <span class="n">predictions</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;AUC train:</span><span class="si">{:0.3f}</span><span class="s2">, AUC test:</span><span class="si">{:0.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">train_auc</span><span class="p">,</span> <span class="n">test_auc</span><span class="p">))</span>
 </pre></div>
@@ -13503,7 +13523,7 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>AUC train:0.947, AUC test:0.703
+<pre>AUC train:0.947, AUC test:0.694
 </pre>
 </div>
 </div>
@@ -13515,30 +13535,22 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The predictions on train set are significantly better, hint of <strong>overfitting</strong></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>To avoid overfittin restrict max_depth and min_samples_split</p>
+<p>The predictions on train set are significantly better, hint of <strong>overfitting</strong>. To avoid overfittin restrict max_depth and min_samples_split</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[67]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">clf</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
-<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">columns</span><span class="p">],</span> <span class="n">train</span><span class="p">[</span><span class="s2">&quot;high_income&quot;</span><span class="p">])</span>
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="n">columns</span><span class="p">])</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">all_columns</span><span class="p">],</span> <span class="n">train</span><span class="p">[</span><span class="s2">&quot;high_income&quot;</span><span class="p">])</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="n">all_columns</span><span class="p">])</span>
 <span class="n">test_auc</span> <span class="o">=</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s2">&quot;high_income&quot;</span><span class="p">],</span> <span class="n">predictions</span><span class="p">)</span>
 
-<span class="n">train_predictions</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">columns</span><span class="p">])</span>
+<span class="n">train_predictions</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">all_columns</span><span class="p">])</span>
 <span class="n">train_auc</span> <span class="o">=</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s2">&quot;high_income&quot;</span><span class="p">],</span> <span class="n">train_predictions</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;AUC train:</span><span class="si">{:0.3f}</span><span class="s2">, AUC test:</span><span class="si">{:0.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">train_auc</span><span class="p">,</span> <span class="n">test_auc</span><span class="p">))</span>
@@ -13558,7 +13570,7 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>AUC train:0.756, AUC test:0.754
+<pre>AUC train:0.748, AUC test:0.744
 </pre>
 </div>
 </div>
@@ -13571,27 +13583,37 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br></p>
-<h3 id="Random-Forest-Classifier-with-holdout-validation">Random Forest Classifier with holdout validation<a class="anchor-link" href="#Random-Forest-Classifier-with-holdout-validation">&#182;</a></h3>
+<h2 id="2---cross_val_predict-Decision-Tree-Classifier-&amp;-Random-Forest-Classifier">2 - cross_val_predict Decision Tree Classifier &amp; Random Forest Classifier<a class="anchor-link" href="#2---cross_val_predict-Decision-Tree-Classifier-&amp;-Random-Forest-Classifier">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Decision Tree Classifier</strong></p>
+
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#max_features=&#39;auto&#39; = sqrt(n_features)</span>
-<span class="n">clf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
-                             <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;gini&#39;</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
-<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">columns</span><span class="p">],</span> <span class="n">train</span><span class="p">[</span><span class="s2">&quot;high_income&quot;</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">kf</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="n">columns</span><span class="p">])</span>
-<span class="n">test_auc</span> <span class="o">=</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s2">&quot;high_income&quot;</span><span class="p">],</span> <span class="n">predictions</span><span class="p">)</span>
+<span class="n">best_model</span> <span class="o">=</span>  <span class="p">{</span><span class="s1">&#39;class_weight&#39;</span><span class="p">:</span> <span class="s1">&#39;balanced&#39;</span><span class="p">,</span> <span class="s1">&#39;criterion&#39;</span><span class="p">:</span> <span class="s1">&#39;gini&#39;</span><span class="p">,</span> <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;max_features&#39;</span><span class="p">:</span> <span class="s1">&#39;auto&#39;</span><span class="p">,</span> 
+               <span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;min_samples_split&#39;</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span> <span class="s1">&#39;random_state&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="n">best_model</span><span class="p">)</span>  
 
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">columns</span><span class="p">])</span>
-<span class="n">train_auc</span> <span class="o">=</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s2">&quot;high_income&quot;</span><span class="p">],</span> <span class="n">predictions</span><span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">income</span><span class="p">[</span><span class="n">all_columns</span><span class="p">],</span> <span class="n">income</span><span class="p">[</span><span class="n">target</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="n">kf</span><span class="p">,</span> <span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;AUC train:</span><span class="si">{:0.3f}</span><span class="s2">, AUC test:</span><span class="si">{:0.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">train_auc</span><span class="p">,</span> <span class="n">test_auc</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">income</span><span class="p">[</span><span class="n">target</span><span class="p">],</span><span class="n">predictions</span><span class="p">))</span>
+<span class="n">cm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">income</span><span class="p">[</span><span class="n">target</span><span class="p">],</span><span class="n">predictions</span><span class="p">)</span>
+<span class="n">myML_functions</span><span class="o">.</span><span class="n">print_cm</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Low Income&#39;</span><span class="p">,</span> <span class="s1">&#39;High Income&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">ROC_AUC: {roc_auc_score(income[target], predictions):0.3f}&quot;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13608,11 +13630,1093 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>AUC train:0.798, AUC test:0.758
+<pre>              precision    recall  f1-score   support
+
+           0       0.94      0.72      0.82     24720
+           1       0.50      0.85      0.63      7841
+
+   micro avg       0.76      0.76      0.76     32561
+   macro avg       0.72      0.79      0.72     32561
+weighted avg       0.83      0.76      0.77     32561
+
+    true / pred  Low Income High Income 
+     Low Income     17908.0      6812.0 
+    High Income      1148.0      6693.0 
+
+ROC_AUC: 0.789
 </pre>
 </div>
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Random Forest Classifier</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">kf</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">best_model</span> <span class="o">=</span>  <span class="p">{</span><span class="s1">&#39;class_weight&#39;</span><span class="p">:</span> <span class="s1">&#39;balanced&#39;</span><span class="p">,</span> <span class="s1">&#39;criterion&#39;</span><span class="p">:</span> <span class="s1">&#39;gini&#39;</span><span class="p">,</span> <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;max_features&#39;</span><span class="p">:</span> <span class="s1">&#39;auto&#39;</span><span class="p">,</span> 
+               <span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;min_samples_split&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span> <span class="s1">&#39;n_jobs&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;random_state&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="n">best_model</span><span class="p">)</span>  
+
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">income</span><span class="p">[</span><span class="n">all_columns</span><span class="p">],</span> <span class="n">income</span><span class="p">[</span><span class="n">target</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="n">kf</span><span class="p">,</span> <span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">income</span><span class="p">[</span><span class="n">target</span><span class="p">],</span><span class="n">predictions</span><span class="p">))</span>
+<span class="n">cm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">income</span><span class="p">[</span><span class="n">target</span><span class="p">],</span><span class="n">predictions</span><span class="p">)</span>
+<span class="n">myML_functions</span><span class="o">.</span><span class="n">print_cm</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Low Income&#39;</span><span class="p">,</span> <span class="s1">&#39;High Income&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">ROC_AUC: {roc_auc_score(income[target], predictions):0.3f}&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>              precision    recall  f1-score   support
+
+           0       0.95      0.71      0.81     24720
+           1       0.49      0.88      0.63      7841
+
+   micro avg       0.75      0.75      0.75     32561
+   macro avg       0.72      0.80      0.72     32561
+weighted avg       0.84      0.75      0.77     32561
+
+    true / pred  Low Income High Income 
+     Low Income     17631.0      7089.0 
+    High Income       939.0      6902.0 
+
+ROC_AUC: 0.797
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><br></p>
+<h2 id="3---RFECV-for-Decision-Tree-&amp;-Random-Forest-Classifier">3 - RFECV for Decision Tree &amp; Random Forest Classifier<a class="anchor-link" href="#3---RFECV-for-Decision-Tree-&amp;-Random-Forest-Classifier">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[157]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">select_features</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>    
+    <span class="c1">#select numeric and drop NaNs</span>
+    <span class="n">df_new</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">])</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+  
+    <span class="n">all_X</span> <span class="o">=</span> <span class="n">df_new</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">all_y</span> <span class="o">=</span> <span class="n">df_new</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
+    
+    <span class="c1">#cv is the number of folds</span>
+    <span class="n">selector</span> <span class="o">=</span> <span class="n">RFECV</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">selector</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">all_X</span><span class="p">,</span> <span class="n">all_y</span><span class="p">)</span>    
+    <span class="n">optimized_columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">all_X</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">selector</span><span class="o">.</span><span class="n">support_</span><span class="p">])</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Best Columns, {type(model).__name__} model: </span><span class="si">{optimized_columns}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>          
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;----------------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>      
+    
+    <span class="k">return</span> <span class="n">optimized_columns</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                               <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="s1">&#39;balanced&#39;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">opt_cols_RFC</span> <span class="o">=</span> <span class="n">select_features</span><span class="p">(</span><span class="n">income</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Best Columns, RandomForestClassifier model: [&#39;age&#39;, &#39;education&#39;, &#39;education_num&#39;, &#39;marital_status&#39;, &#39;relationship&#39;, &#39;hours_per_week&#39;]
+
+----------------------------------------------------
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">selected_features_manual</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="s2">&quot;workclass&quot;</span><span class="p">,</span> <span class="s2">&quot;education&quot;</span><span class="p">,</span> <span class="s2">&quot;education_num&quot;</span><span class="p">,</span> <span class="s2">&quot;marital_status&quot;</span><span class="p">,</span> <span class="s2">&quot;occupation&quot;</span><span class="p">,</span> 
+                            <span class="s2">&quot;relationship&quot;</span><span class="p">,</span> <span class="s2">&quot;race&quot;</span><span class="p">,</span> <span class="s2">&quot;sex&quot;</span><span class="p">,</span> <span class="s2">&quot;hours_per_week&quot;</span><span class="p">,</span> <span class="s2">&quot;native_country&quot;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><br></p>
+<h2 id="4---Model-Selection-with-GridSearchCV">4 - Model Selection with GridSearchCV<a class="anchor-link" href="#4---Model-Selection-with-GridSearchCV">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[247]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">select_model</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">models_to_fit</span><span class="p">,</span> <span class="n">refit_metric</span> <span class="o">=</span> <span class="s1">&#39;ROC_AUC&#39;</span><span class="p">):</span> 
+    
+    <span class="n">lr</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">max_iter</span> <span class="o">=</span> <span class="mi">50000</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;newton&#39;</span><span class="p">)</span>
+    <span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="s1">&#39;balanced&#39;</span><span class="p">)</span> 
+    <span class="n">gnb</span> <span class="o">=</span> <span class="n">GaussianNB</span><span class="p">()</span>
+    <span class="n">gb</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                    <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+    <span class="n">ab</span> <span class="o">=</span> <span class="n">AdaBoostClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;SAMME.R&#39;</span><span class="p">)</span>
+    
+    <span class="n">dicts</span><span class="o">=</span> <span class="p">[</span> <span class="p">{</span>
+               <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;LogisticRegression&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;estimator&quot;</span><span class="p">:</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">max_iter</span> <span class="o">=</span> <span class="mi">50000</span><span class="p">),</span>
+               <span class="s2">&quot;hyperparameters&quot;</span><span class="p">:</span> 
+                 <span class="p">{</span>                
+                   <span class="s2">&quot;solver&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;newton-cg&quot;</span><span class="p">,</span> <span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="s2">&quot;liblinear&quot;</span><span class="p">],</span>  
+                   <span class="s2">&quot;class_weight&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;balanced&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>                      
+                 <span class="p">}</span>
+             <span class="p">},</span>
+             <span class="p">{</span>
+               <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;GaussianNB&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;estimator&quot;</span><span class="p">:</span> <span class="n">GaussianNB</span><span class="p">(),</span>
+               <span class="s2">&quot;hyperparameters&quot;</span><span class="p">:</span> 
+                 <span class="p">{</span>                   
+                   <span class="s2">&quot;var_smoothing&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.e-8</span><span class="p">,</span><span class="mf">1.e-9</span><span class="p">,</span><span class="mf">1.e-10</span><span class="p">]</span>                      
+                 <span class="p">}</span>
+             <span class="p">},</span>
+             <span class="p">{</span>
+               <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;KNeighborsClassifier&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;estimator&quot;</span><span class="p">:</span> <span class="n">KNeighborsClassifier</span><span class="p">(),</span>
+               <span class="s2">&quot;hyperparameters&quot;</span><span class="p">:</span> 
+                 <span class="p">{</span>
+                   <span class="s2">&quot;n_neighbors&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span>
+                   <span class="s2">&quot;weights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;distance&quot;</span><span class="p">,</span> <span class="s2">&quot;uniform&quot;</span><span class="p">],</span>
+                   <span class="s2">&quot;algorithm&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ball_tree&quot;</span><span class="p">,</span> <span class="s2">&quot;kd_tree&quot;</span><span class="p">,</span> <span class="s2">&quot;brute&quot;</span><span class="p">],</span>
+                   <span class="s2">&quot;p&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+                 <span class="p">}</span>
+             <span class="p">},</span>
+             <span class="p">{</span>
+               <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;BaggingClassifier&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;estimator&quot;</span><span class="p">:</span> <span class="n">BaggingClassifier</span><span class="p">(</span><span class="n">KNeighborsClassifier</span><span class="p">(</span><span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;kd_tree&#39;</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> 
+                                                                   <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s1">&#39;uniform&#39;</span><span class="p">)),</span>
+               <span class="s2">&quot;hyperparameters&quot;</span><span class="p">:</span> 
+                 <span class="p">{</span>
+                   <span class="s2">&quot;n_estimators&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>  
+                   <span class="s2">&quot;max_samples&quot;</span> <span class="p">:[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span>
+                   <span class="s2">&quot;max_features&quot;</span> <span class="p">:[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span>   
+                   <span class="s2">&quot;bootstrap&quot;</span> <span class="p">:[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span>
+                   <span class="s2">&quot;warm_start&quot;</span> <span class="p">:[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+                 <span class="p">}</span>
+             <span class="p">},</span>
+             <span class="p">{</span>
+               <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;GradientBoostingClassifier&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;estimator&quot;</span><span class="p">:</span> <span class="n">GradientBoostingClassifier</span><span class="p">(),</span>
+               <span class="s2">&quot;hyperparameters&quot;</span><span class="p">:</span> 
+                 <span class="p">{</span>
+                   <span class="s2">&quot;n_estimators&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>  
+                   <span class="s2">&quot;max_features&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;log2&quot;</span><span class="p">,</span> <span class="s2">&quot;sqrt&quot;</span><span class="p">],</span>
+                   <span class="s2">&quot;learning_rate&quot;</span><span class="p">:[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+                   <span class="s2">&quot;subsample&quot;</span><span class="p">:[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>  
+                   <span class="s2">&quot;random_state&quot;</span><span class="p">:[</span><span class="mi">1</span><span class="p">]</span>     
+                 <span class="p">}</span>
+             <span class="p">},</span>
+             <span class="p">{</span>
+               <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;AdaBoostClassifier&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;estimator&quot;</span><span class="p">:</span> <span class="n">AdaBoostClassifier</span><span class="p">(),</span>
+               <span class="s2">&quot;hyperparameters&quot;</span><span class="p">:</span> 
+                 <span class="p">{</span>
+                   <span class="s2">&quot;n_estimators&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>                     
+                   <span class="s2">&quot;learning_rate&quot;</span><span class="p">:[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+                   <span class="s2">&quot;algorithm&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;SAMME&#39;</span><span class="p">,</span><span class="s1">&#39;SAMME.R&#39;</span><span class="p">],</span>  
+                   <span class="s2">&quot;random_state&quot;</span><span class="p">:[</span><span class="mi">1</span><span class="p">]</span>     
+                 <span class="p">}</span>
+             <span class="p">},</span>
+             <span class="p">{</span>
+               <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;DecisionTreeClassifier&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;estimator&quot;</span><span class="p">:</span> <span class="n">DecisionTreeClassifier</span><span class="p">(),</span>
+               <span class="s2">&quot;hyperparameters&quot;</span><span class="p">:</span> 
+                 <span class="p">{</span>                   
+                   <span class="s2">&quot;criterion&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;entropy&quot;</span><span class="p">,</span> <span class="s2">&quot;gini&quot;</span><span class="p">],</span>
+                   <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+                   <span class="s2">&quot;max_features&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;log2&quot;</span><span class="p">,</span> <span class="s2">&quot;sqrt&quot;</span><span class="p">],</span>
+                   <span class="s2">&quot;min_samples_leaf&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
+                   <span class="s2">&quot;min_samples_split&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> 
+                   <span class="s2">&quot;class_weight&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;balanced&quot;</span><span class="p">]</span>               
+                 <span class="p">}</span>
+             <span class="p">},</span>
+             <span class="p">{</span>
+               <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;ExtraTreesClassifier&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;estimator&quot;</span><span class="p">:</span> <span class="n">ExtraTreesClassifier</span><span class="p">(),</span>
+               <span class="s2">&quot;hyperparameters&quot;</span><span class="p">:</span> 
+                 <span class="p">{</span>     
+                   <span class="s2">&quot;n_estimators&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>  
+                   <span class="s2">&quot;criterion&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;entropy&quot;</span><span class="p">,</span> <span class="s2">&quot;gini&quot;</span><span class="p">],</span>
+                   <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+                   <span class="s2">&quot;max_features&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;log2&quot;</span><span class="p">,</span> <span class="s2">&quot;sqrt&quot;</span><span class="p">],</span>
+                   <span class="s2">&quot;min_samples_leaf&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+                   <span class="s2">&quot;min_samples_split&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> 
+                   <span class="s2">&quot;class_weight&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;balanced&quot;</span><span class="p">,</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">5</span><span class="p">}]</span>               
+                 <span class="p">}</span>
+             <span class="p">},</span>
+             <span class="p">{</span>
+               <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;RandomForestClassifier&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;estimator&quot;</span><span class="p">:</span> <span class="n">RandomForestClassifier</span><span class="p">(),</span>
+               <span class="s2">&quot;hyperparameters&quot;</span><span class="p">:</span> 
+                 <span class="p">{</span>     
+                   <span class="s2">&quot;n_estimators&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>  
+                   <span class="s2">&quot;criterion&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;entropy&quot;</span><span class="p">,</span> <span class="s2">&quot;gini&quot;</span><span class="p">],</span>
+                   <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+                   <span class="s2">&quot;max_features&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;log2&quot;</span><span class="p">,</span> <span class="s2">&quot;sqrt&quot;</span><span class="p">],</span>
+                   <span class="s2">&quot;min_samples_leaf&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+                   <span class="s2">&quot;min_samples_split&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> 
+                   <span class="s2">&quot;class_weight&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;balanced&quot;</span><span class="p">,</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">5</span><span class="p">}]</span>               
+                 <span class="p">}</span>
+             <span class="p">},</span>
+             <span class="p">{</span>
+               <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;VotingClassifier&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;estimator&quot;</span><span class="p">:</span> <span class="n">VotingClassifier</span><span class="p">(</span><span class="n">estimators</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;rf&#39;</span><span class="p">,</span> <span class="n">rf</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;gb&#39;</span><span class="p">,</span> <span class="n">gb</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ab&#39;</span><span class="p">,</span> <span class="n">ab</span><span class="p">)]),</span>              
+               <span class="s2">&quot;hyperparameters&quot;</span><span class="p">:</span> 
+                 <span class="p">{</span>     
+                   <span class="s2">&quot;voting&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;soft&quot;</span><span class="p">]</span>           
+                 <span class="p">}</span>
+                
+             <span class="p">}]</span>    
+  
+    <span class="n">scoring</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ROC_AUC&#39;</span><span class="p">:</span><span class="s1">&#39;roc_auc&#39;</span><span class="p">,</span> <span class="s1">&#39;Accuracy&#39;</span><span class="p">:</span><span class="s1">&#39;accuracy&#39;</span><span class="p">,</span> 
+               <span class="s1">&#39;recall&#39;</span><span class="p">:</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">recall_score</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">&#39;weighted&#39;</span><span class="p">),</span>
+               <span class="s1">&#39;recall_1&#39;</span><span class="p">:</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">recall_score</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>              
+               <span class="s1">&#39;recall_0&#39;</span><span class="p">:</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">recall_score</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">0</span><span class="p">)}</span>
+        
+    <span class="n">all_y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>    
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">models_list</span> <span class="ow">in</span> <span class="n">models_to_fit</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>        
+        <span class="nb">print</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">dicts</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">models_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">element</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]:</span>               
+                <span class="n">all_X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">models_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>   
+                <span class="n">model</span> <span class="o">=</span> <span class="n">element</span><span class="p">[</span><span class="s1">&#39;estimator&#39;</span><span class="p">]</span>                
+                <span class="n">grid</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">element</span><span class="p">[</span><span class="s1">&#39;hyperparameters&#39;</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span> 
+                                    <span class="n">refit</span><span class="o">=</span><span class="n">refit_metric</span><span class="p">,</span> <span class="n">iid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">grid</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">all_X</span><span class="p">,</span> <span class="n">all_y</span><span class="p">)</span>
+                
+                <span class="n">element</span><span class="p">[</span><span class="s1">&#39;best_params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">best_params_</span>
+                <span class="n">element</span><span class="p">[</span><span class="s1">&#39;best_score&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">best_score_</span>
+                <span class="n">element</span><span class="p">[</span><span class="s1">&#39;best_estimator&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">best_estimator_</span>  
+                
+                <span class="c1">#get the index of the best model in the list of scores</span>
+                <span class="n">results</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">cv_results_</span>
+                <span class="n">best_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;rank_test_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">refit_metric</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                
+                <span class="c1">#print best score for Metric used to choose best model</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{refit_metric}</span><span class="s2">:{max(results[&#39;mean_test_&#39;+refit_metric]):0.3f} &quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;(Metric used to choose best model)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> 
+                
+                <span class="c1">#loop over the scores for all metrics for all models</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;{&#39; &#39;:10} best_value | value_best_model&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">scorer</span> <span class="ow">in</span> <span class="n">scoring</span><span class="p">:</span>   
+                    <span class="c1">#print scores for other metrics </span>
+                    <span class="k">if</span><span class="p">(</span><span class="n">scorer</span><span class="o">!=</span><span class="n">refit_metric</span><span class="p">):</span>                                                 
+                        <span class="n">score_best_model</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;mean_test_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">scorer</span><span class="p">][</span><span class="n">best_index</span><span class="p">]</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;{scorer+&#39;:&#39;:&lt;15} {max(results[&#39;mean_test_&#39;+scorer]):0.3f} | </span><span class="si">{score_best_model:0.3f}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>       
+                <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Best Parameters: </span><span class="si">{grid.best_params_}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Best Score: </span><span class="si">{grid.best_score_:0.3f}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Time elapsed: {(time.time()-start)/60.:0.2f} mins</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">110</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1">#for scorer in scoring:</span>
+        <span class="c1">#    print(cv_results_&#39;_&lt;scorer_name&gt;&#39;)</span>
+       
+    <span class="k">return</span> <span class="n">dicts</span>
+ 
+<span class="n">models_to_fit</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;VotingClassifier&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;VotingClassifier&#39;</span><span class="p">,</span> <span class="n">opt_cols_RFC</span><span class="p">],</span>
+                 <span class="s1">&#39;LogisticRegression&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;LogisticRegression&#39;</span><span class="p">,</span> <span class="n">opt_cols_RFC</span><span class="p">],</span> 
+                 <span class="s1">&#39;GaussianNB&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;GaussianNB&#39;</span><span class="p">,</span> <span class="n">opt_cols_RFC</span><span class="p">],</span> 
+                 <span class="s1">&#39;KNeighborsClassifier&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;KNeighborsClassifier&#39;</span><span class="p">,</span> <span class="n">opt_cols_RFC</span><span class="p">],</span>
+                 <span class="s1">&#39;BaggingClassifier&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;BaggingClassifier&#39;</span><span class="p">,</span> <span class="n">opt_cols_RFC</span><span class="p">],</span>                 
+                 <span class="s1">&#39;GradientBoostingClassifier&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;GradientBoostingClassifier&#39;</span><span class="p">,</span> <span class="n">opt_cols_RFC</span><span class="p">],</span>
+                 <span class="s1">&#39;AdaBoostClassifier&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;AdaBoostClassifier&#39;</span><span class="p">,</span> <span class="n">opt_cols_RFC</span><span class="p">],</span>
+                 <span class="s1">&#39;DecisionTreeClassifier&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;DecisionTreeClassifier&#39;</span><span class="p">,</span> <span class="n">opt_cols_RFC</span><span class="p">],</span>
+                 <span class="s1">&#39;ExtraTreesClassifier&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;ExtraTreesClassifier&#39;</span><span class="p">,</span> <span class="n">opt_cols_RFC</span><span class="p">],</span>                
+                 <span class="s1">&#39;RandomForestClassifier&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;RandomForestClassifier&#39;</span><span class="p">,</span> <span class="n">opt_cols_RFC</span><span class="p">]</span>
+                 
+                <span class="p">}</span>    
+                         
+<span class="c1">#models_to_fit = {&#39;DecisionTreeClassifier&#39;: [&#39;DecisionTreeClassifier&#39;, opt_cols_RFC]} </span>
+                  
+<span class="n">max_train_row</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">income</span><span class="p">)</span><span class="o">*</span><span class="mf">0.1</span><span class="p">)</span>     
+                          
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Number of samples to train on: </span><span class="si">{max_train_row}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>                          
+<span class="n">model_dicts</span> <span class="o">=</span> <span class="n">select_model</span><span class="p">(</span><span class="n">income</span><span class="p">[:</span><span class="n">max_train_row</span><span class="p">],</span> <span class="n">target</span><span class="p">,</span> <span class="n">models_to_fit</span><span class="p">,</span> <span class="n">refit_metric</span> <span class="o">=</span> <span class="s1">&#39;ROC_AUC&#39;</span><span class="p">)</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;model selection finished&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Number of samples to train on: 3256
+
+VotingClassifier
+----------------
+ROC_AUC:0.863 (Metric used to choose best model)
+
+           best_value | value_best_model
+Accuracy:       0.807 | 0.807
+recall:         0.807 | 0.807
+recall_1:       0.695 | 0.695
+recall_0:       0.840 | 0.840
+
+Best Parameters: {&#39;voting&#39;: &#39;soft&#39;}
+Best Score: 0.863
+
+Time elapsed: 0.29 mins
+
+==============================================================================================================
+
+
+LogisticRegression
+------------------
+ROC_AUC:0.814 (Metric used to choose best model)
+
+           best_value | value_best_model
+Accuracy:       0.808 | 0.727
+recall:         0.808 | 0.727
+recall_1:       0.765 | 0.764
+recall_0:       0.946 | 0.717
+
+Best Parameters: {&#39;class_weight&#39;: &#39;balanced&#39;, &#39;solver&#39;: &#39;newton-cg&#39;}
+Best Score: 0.814
+
+Time elapsed: 0.05 mins
+
+==============================================================================================================
+
+
+GaussianNB
+----------
+ROC_AUC:0.848 (Metric used to choose best model)
+
+           best_value | value_best_model
+Accuracy:       0.807 | 0.807
+recall:         0.807 | 0.807
+recall_1:       0.670 | 0.670
+recall_0:       0.847 | 0.847
+
+Best Parameters: {&#39;var_smoothing&#39;: 1e-08}
+Best Score: 0.848
+
+Time elapsed: 0.02 mins
+
+==============================================================================================================
+
+
+KNeighborsClassifier
+--------------------
+ROC_AUC:0.838 (Metric used to choose best model)
+
+           best_value | value_best_model
+Accuracy:       0.817 | 0.811
+recall:         0.817 | 0.811
+recall_1:       0.491 | 0.455
+recall_0:       0.919 | 0.915
+
+Best Parameters: {&#39;algorithm&#39;: &#39;brute&#39;, &#39;n_neighbors&#39;: 19, &#39;p&#39;: 1, &#39;weights&#39;: &#39;uniform&#39;}
+Best Score: 0.838
+
+Time elapsed: 13.06 mins
+
+==============================================================================================================
+
+
+BaggingClassifier
+-----------------
+ROC_AUC:0.869 (Metric used to choose best model)
+
+           best_value | value_best_model
+Accuracy:       0.822 | 0.781
+recall:         0.822 | 0.781
+recall_1:       0.382 | 0.042
+recall_0:       1.000 | 0.999
+
+Best Parameters: {&#39;bootstrap&#39;: False, &#39;max_features&#39;: 0.1, &#39;max_samples&#39;: 0.5, &#39;n_estimators&#39;: 100, &#39;warm_start&#39;: False}
+Best Score: 0.869
+
+Time elapsed: 45.20 mins
+
+==============================================================================================================
+
+
+GradientBoostingClassifier
+--------------------------
+ROC_AUC:0.869 (Metric used to choose best model)
+
+           best_value | value_best_model
+Accuracy:       0.826 | 0.823
+recall:         0.826 | 0.823
+recall_1:       0.509 | 0.438
+recall_0:       1.000 | 0.936
+
+Best Parameters: {&#39;learning_rate&#39;: 0.05, &#39;max_features&#39;: &#39;log2&#39;, &#39;n_estimators&#39;: 100, &#39;random_state&#39;: 1, &#39;subsample&#39;: 1.0}
+Best Score: 0.869
+
+Time elapsed: 1.40 mins
+
+==============================================================================================================
+
+
+AdaBoostClassifier
+------------------
+ROC_AUC:0.868 (Metric used to choose best model)
+
+           best_value | value_best_model
+Accuracy:       0.822 | 0.822
+recall:         0.822 | 0.822
+recall_1:       0.445 | 0.357
+recall_0:       1.000 | 0.959
+
+Best Parameters: {&#39;algorithm&#39;: &#39;SAMME.R&#39;, &#39;learning_rate&#39;: 0.1, &#39;n_estimators&#39;: 100, &#39;random_state&#39;: 1}
+Best Score: 0.868
+
+Time elapsed: 0.57 mins
+
+==============================================================================================================
+
+
+DecisionTreeClassifier
+----------------------
+ROC_AUC:0.855 (Metric used to choose best model)
+
+           best_value | value_best_model
+Accuracy:       0.821 | 0.754
+recall:         0.821 | 0.754
+recall_1:       0.877 | 0.839
+recall_0:       0.994 | 0.729
+
+Best Parameters: {&#39;class_weight&#39;: &#39;balanced&#39;, &#39;criterion&#39;: &#39;entropy&#39;, &#39;max_depth&#39;: 10, &#39;max_features&#39;: &#39;log2&#39;, &#39;min_samples_leaf&#39;: 19, &#39;min_samples_split&#39;: 2}
+Best Score: 0.855
+
+Time elapsed: 3.34 mins
+
+==============================================================================================================
+
+
+ExtraTreesClassifier
+--------------------
+ROC_AUC:0.868 (Metric used to choose best model)
+
+           best_value | value_best_model
+Accuracy:       0.826 | 0.743
+recall:         0.826 | 0.743
+recall_1:       0.969 | 0.863
+recall_0:       1.000 | 0.708
+
+Best Parameters: {&#39;class_weight&#39;: &#39;balanced&#39;, &#39;criterion&#39;: &#39;gini&#39;, &#39;max_depth&#39;: 10, &#39;max_features&#39;: &#39;sqrt&#39;, &#39;min_samples_leaf&#39;: 8, &#39;min_samples_split&#39;: 2, &#39;n_estimators&#39;: 20}
+Best Score: 0.868
+
+Time elapsed: 27.07 mins
+
+==============================================================================================================
+
+
+RandomForestClassifier
+----------------------
+ROC_AUC:0.868 (Metric used to choose best model)
+
+           best_value | value_best_model
+Accuracy:       0.826 | 0.822
+recall:         0.826 | 0.822
+recall_1:       0.924 | 0.405
+recall_0:       0.991 | 0.944
+
+Best Parameters: {&#39;class_weight&#39;: None, &#39;criterion&#39;: &#39;entropy&#39;, &#39;max_depth&#39;: 5, &#39;max_features&#39;: &#39;log2&#39;, &#39;min_samples_leaf&#39;: 1, &#39;min_samples_split&#39;: 2, &#39;n_estimators&#39;: 100}
+Best Score: 0.868
+
+Time elapsed: 30.04 mins
+
+==============================================================================================================
+
+
+model selection finished
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="refit-=-recall_1">refit = recall_1<a class="anchor-link" href="#refit-=-recall_1">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[250]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">max_train_row</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">income</span><span class="p">)</span><span class="o">*</span><span class="mf">0.1</span><span class="p">)</span>     
+                          
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Number of samples to train on: </span><span class="si">{max_train_row}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>                          
+<span class="n">model_dicts</span> <span class="o">=</span> <span class="n">select_model</span><span class="p">(</span><span class="n">income</span><span class="p">[:</span><span class="n">max_train_row</span><span class="p">],</span> <span class="n">target</span><span class="p">,</span> <span class="n">models_to_fit</span><span class="p">,</span> <span class="n">refit_metric</span> <span class="o">=</span> <span class="s1">&#39;recall_1&#39;</span><span class="p">)</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;model selection finished&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Number of samples to train on: 3256
+
+VotingClassifier
+----------------
+recall_1:0.695 (Metric used to choose best model)
+
+           best_value | value_best_model
+ROC_AUC:        0.863 | 0.863
+Accuracy:       0.807 | 0.807
+recall:         0.807 | 0.807
+recall_0:       0.840 | 0.840
+
+Best Parameters: {&#39;voting&#39;: &#39;soft&#39;}
+Best Score: 0.695
+
+Time elapsed: 0.24 mins
+
+==============================================================================================================
+
+
+LogisticRegression
+------------------
+recall_1:0.765 (Metric used to choose best model)
+
+           best_value | value_best_model
+ROC_AUC:        0.814 | 0.813
+Accuracy:       0.808 | 0.725
+recall:         0.808 | 0.725
+recall_0:       0.946 | 0.713
+
+Best Parameters: {&#39;class_weight&#39;: &#39;balanced&#39;, &#39;solver&#39;: &#39;liblinear&#39;}
+Best Score: 0.765
+
+Time elapsed: 0.04 mins
+
+==============================================================================================================
+
+
+GaussianNB
+----------
+recall_1:0.670 (Metric used to choose best model)
+
+           best_value | value_best_model
+ROC_AUC:        0.848 | 0.848
+Accuracy:       0.807 | 0.807
+recall:         0.807 | 0.807
+recall_0:       0.847 | 0.847
+
+Best Parameters: {&#39;var_smoothing&#39;: 1e-08}
+Best Score: 0.670
+
+Time elapsed: 0.01 mins
+
+==============================================================================================================
+
+
+KNeighborsClassifier
+--------------------
+recall_1:0.491 (Metric used to choose best model)
+
+           best_value | value_best_model
+ROC_AUC:        0.838 | 0.669
+Accuracy:       0.817 | 0.766
+recall:         0.817 | 0.766
+recall_0:       0.919 | 0.847
+
+Best Parameters: {&#39;algorithm&#39;: &#39;kd_tree&#39;, &#39;n_neighbors&#39;: 1, &#39;p&#39;: 1, &#39;weights&#39;: &#39;distance&#39;}
+Best Score: 0.491
+
+Time elapsed: 11.94 mins
+
+==============================================================================================================
+
+
+BaggingClassifier
+-----------------
+recall_1:0.391 (Metric used to choose best model)
+
+           best_value | value_best_model
+ROC_AUC:        0.869 | 0.849
+Accuracy:       0.822 | 0.818
+recall:         0.822 | 0.818
+recall_0:       1.000 | 0.944
+
+Best Parameters: {&#39;bootstrap&#39;: True, &#39;max_features&#39;: 0.5, &#39;max_samples&#39;: 0.8, &#39;n_estimators&#39;: 5, &#39;warm_start&#39;: False}
+Best Score: 0.391
+
+Time elapsed: 47.59 mins
+
+==============================================================================================================
+
+
+GradientBoostingClassifier
+--------------------------
+recall_1:0.509 (Metric used to choose best model)
+
+           best_value | value_best_model
+ROC_AUC:        0.869 | 0.822
+Accuracy:       0.826 | 0.799
+recall:         0.826 | 0.799
+recall_0:       1.000 | 0.884
+
+Best Parameters: {&#39;learning_rate&#39;: 0.5, &#39;max_features&#39;: &#39;log2&#39;, &#39;n_estimators&#39;: 20, &#39;random_state&#39;: 1, &#39;subsample&#39;: 0.1}
+Best Score: 0.509
+
+Time elapsed: 1.57 mins
+
+==============================================================================================================
+
+
+AdaBoostClassifier
+------------------
+recall_1:0.445 (Metric used to choose best model)
+
+           best_value | value_best_model
+ROC_AUC:        0.868 | 0.867
+Accuracy:       0.822 | 0.821
+recall:         0.822 | 0.821
+recall_0:       1.000 | 0.932
+
+Best Parameters: {&#39;algorithm&#39;: &#39;SAMME.R&#39;, &#39;learning_rate&#39;: 0.5, &#39;n_estimators&#39;: 100, &#39;random_state&#39;: 1}
+Best Score: 0.445
+
+Time elapsed: 0.58 mins
+
+==============================================================================================================
+
+
+DecisionTreeClassifier
+----------------------
+recall_1:0.907 (Metric used to choose best model)
+
+           best_value | value_best_model
+ROC_AUC:        0.855 | 0.769
+Accuracy:       0.821 | 0.624
+recall:         0.821 | 0.624
+recall_0:       1.000 | 0.541
+
+Best Parameters: {&#39;class_weight&#39;: &#39;balanced&#39;, &#39;criterion&#39;: &#39;gini&#39;, &#39;max_depth&#39;: 2, &#39;max_features&#39;: &#39;sqrt&#39;, &#39;min_samples_leaf&#39;: 4, &#39;min_samples_split&#39;: 2}
+Best Score: 0.907
+
+Time elapsed: 3.52 mins
+
+==============================================================================================================
+
+
+ExtraTreesClassifier
+--------------------
+recall_1:0.972 (Metric used to choose best model)
+
+           best_value | value_best_model
+ROC_AUC:        0.869 | 0.848
+Accuracy:       0.827 | 0.589
+recall:         0.827 | 0.589
+recall_0:       1.000 | 0.477
+
+Best Parameters: {&#39;class_weight&#39;: {0: 1, 1: 5}, &#39;criterion&#39;: &#39;entropy&#39;, &#39;max_depth&#39;: 2, &#39;max_features&#39;: &#39;sqrt&#39;, &#39;min_samples_leaf&#39;: 8, &#39;min_samples_split&#39;: 2, &#39;n_estimators&#39;: 100}
+Best Score: 0.972
+
+Time elapsed: 33.96 mins
+
+==============================================================================================================
+
+
+RandomForestClassifier
+----------------------
+recall_1:0.923 (Metric used to choose best model)
+
+           best_value | value_best_model
+ROC_AUC:        0.869 | 0.840
+Accuracy:       0.828 | 0.632
+recall:         0.828 | 0.632
+recall_0:       0.993 | 0.547
+
+Best Parameters: {&#39;class_weight&#39;: {0: 1, 1: 5}, &#39;criterion&#39;: &#39;gini&#39;, &#39;max_depth&#39;: 2, &#39;max_features&#39;: &#39;log2&#39;, &#39;min_samples_leaf&#39;: 1, &#39;min_samples_split&#39;: 3, &#39;n_estimators&#39;: 5}
+Best Score: 0.923
+
+Time elapsed: 34.61 mins
+
+==============================================================================================================
+
+
+model selection finished
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><br></p>
+<h2 id="5---cross_val_predict-for-best-models-(GradientBoostingClassifier,-DecisionTreeClassifier,-ExtraTreesClassifier,-RandomForestClassifier)">5 - cross_val_predict for best models (GradientBoostingClassifier, DecisionTreeClassifier, ExtraTreesClassifier, RandomForestClassifier)<a class="anchor-link" href="#5---cross_val_predict-for-best-models-(GradientBoostingClassifier,-DecisionTreeClassifier,-ExtraTreesClassifier,-RandomForestClassifier)">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[251]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">best_model</span> <span class="o">=</span>  <span class="p">{</span><span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span> <span class="s1">&#39;max_features&#39;</span><span class="p">:</span> <span class="s1">&#39;log2&#39;</span><span class="p">,</span> <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;random_state&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> 
+               <span class="s1">&#39;subsample&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">}</span>
+<span class="n">model_0</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">()</span>
+<span class="n">model_0</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="n">best_model</span><span class="p">)</span>  
+
+<span class="n">best_model</span> <span class="o">=</span>  <span class="p">{</span><span class="s1">&#39;class_weight&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;criterion&#39;</span><span class="p">:</span> <span class="s1">&#39;entropy&#39;</span><span class="p">,</span> <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;max_features&#39;</span><span class="p">:</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">,</span> 
+               <span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">:</span> <span class="mi">19</span><span class="p">,</span> <span class="s1">&#39;min_samples_split&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+<span class="n">model_1</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">()</span>
+<span class="n">model_1</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="n">best_model</span><span class="p">)</span>  
+
+<span class="n">best_model</span> <span class="o">=</span>  <span class="p">{</span><span class="s1">&#39;class_weight&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;criterion&#39;</span><span class="p">:</span> <span class="s1">&#39;entropy&#39;</span><span class="p">,</span> <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> 
+               <span class="s1">&#39;max_features&#39;</span><span class="p">:</span> <span class="s1">&#39;log2&#39;</span><span class="p">,</span> <span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;min_samples_split&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> 
+               <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;n_jobs&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}</span>
+<span class="n">model_2</span> <span class="o">=</span> <span class="n">ExtraTreesClassifier</span><span class="p">()</span>
+<span class="n">model_2</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="n">best_model</span><span class="p">)</span>  
+
+<span class="n">best_model</span> <span class="o">=</span>  <span class="p">{</span><span class="s1">&#39;class_weight&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;criterion&#39;</span><span class="p">:</span> <span class="s1">&#39;gini&#39;</span><span class="p">,</span> <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;max_features&#39;</span><span class="p">:</span> <span class="s1">&#39;log2&#39;</span><span class="p">,</span> 
+               <span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;min_samples_split&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;n_jobs&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;random_state&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span>
+
+<span class="n">model_3</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">()</span>
+<span class="n">model_3</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="n">best_model</span><span class="p">)</span>  
+
+
+<span class="c1">#Models optimized for recall_1</span>
+<span class="n">best_model</span> <span class="o">=</span>  <span class="p">{</span><span class="s1">&#39;class_weight&#39;</span><span class="p">:</span> <span class="s1">&#39;balanced&#39;</span><span class="p">,</span> <span class="s1">&#39;criterion&#39;</span><span class="p">:</span> <span class="s1">&#39;gini&#39;</span><span class="p">,</span> <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;max_features&#39;</span><span class="p">:</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">,</span> 
+               <span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;min_samples_split&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+<span class="n">model_4</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">()</span>
+<span class="n">model_4</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="n">best_model</span><span class="p">)</span>   
+
+<span class="n">best_model</span> <span class="o">=</span>  <span class="p">{</span><span class="s1">&#39;class_weight&#39;</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">5</span><span class="p">},</span> <span class="s1">&#39;criterion&#39;</span><span class="p">:</span> <span class="s1">&#39;gini&#39;</span><span class="p">,</span> <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;max_features&#39;</span><span class="p">:</span> <span class="s1">&#39;log2&#39;</span><span class="p">,</span> 
+               <span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;min_samples_split&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;n_jobs&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}</span>
+
+<span class="n">model_5</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">()</span>
+<span class="n">model_5</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="n">best_model</span><span class="p">)</span>  
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;models initialized&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>models initialized
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="best-models-for-optimized-ROC_AUC">best models for optimized ROC_AUC<a class="anchor-link" href="#best-models-for-optimized-ROC_AUC">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[255]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">models</span> <span class="o">=</span> <span class="p">[</span><span class="n">model_0</span><span class="p">,</span> <span class="n">model_1</span><span class="p">,</span> <span class="n">model_3</span><span class="p">]</span>
+<span class="n">kf</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">income</span><span class="p">[</span><span class="n">optimized_columns_RFC</span><span class="p">],</span> <span class="n">income</span><span class="p">[</span><span class="n">target</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="n">kf</span><span class="p">,</span> <span class="p">)</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+    <span class="n">pred_proba</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">income</span><span class="p">[</span><span class="n">optimized_columns_RFC</span><span class="p">],</span> <span class="n">income</span><span class="p">[</span><span class="n">target</span><span class="p">],</span><span class="n">cv</span><span class="o">=</span><span class="n">kf</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;predict_proba&#39;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Results for {type(model).__name__}:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">income</span><span class="p">[</span><span class="n">target</span><span class="p">],</span><span class="n">predictions</span><span class="p">))</span>
+    <span class="n">cm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">income</span><span class="p">[</span><span class="n">target</span><span class="p">],</span><span class="n">predictions</span><span class="p">)</span>
+    <span class="n">myML_functions</span><span class="o">.</span><span class="n">print_cm</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Low Income&#39;</span><span class="p">,</span> <span class="s1">&#39;High Income&#39;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">ROC_AUC: {roc_auc_score(income[target], pred_proba[:,1]):0.3f}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> 
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;------------------------------------------------------</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Results for GradientBoostingClassifier:
+
+              precision    recall  f1-score   support
+
+           0       0.85      0.94      0.89     24720
+           1       0.71      0.49      0.58      7841
+
+   micro avg       0.83      0.83      0.83     32561
+   macro avg       0.78      0.71      0.74     32561
+weighted avg       0.82      0.83      0.82     32561
+
+    true / pred  Low Income High Income 
+     Low Income     23176.0      1544.0 
+    High Income      4001.0      3840.0 
+
+ROC_AUC: 0.883
+
+------------------------------------------------------
+
+
+Results for DecisionTreeClassifier:
+
+              precision    recall  f1-score   support
+
+           0       0.85      0.92      0.88     24720
+           1       0.66      0.49      0.56      7841
+
+   micro avg       0.82      0.82      0.82     32561
+   macro avg       0.76      0.71      0.72     32561
+weighted avg       0.81      0.82      0.81     32561
+
+    true / pred  Low Income High Income 
+     Low Income     22727.0      1993.0 
+    High Income      3974.0      3867.0 
+
+ROC_AUC: 0.869
+
+------------------------------------------------------
+
+
+Results for RandomForestClassifier:
+
+              precision    recall  f1-score   support
+
+           0       0.84      0.95      0.89     24720
+           1       0.74      0.41      0.52      7841
+
+   micro avg       0.82      0.82      0.82     32561
+   macro avg       0.79      0.68      0.71     32561
+weighted avg       0.81      0.82      0.80     32561
+
+    true / pred  Low Income High Income 
+     Low Income     23580.0      1140.0 
+    High Income      4658.0      3183.0 
+
+ROC_AUC: 0.877
+
+------------------------------------------------------
+
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="best-models-for-optimized-Recall_1">best models for optimized Recall_1<a class="anchor-link" href="#best-models-for-optimized-Recall_1">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[256]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">models</span> <span class="o">=</span> <span class="p">[</span><span class="n">model_4</span><span class="p">,</span> <span class="n">model_5</span><span class="p">]</span>
+<span class="n">kf</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">income</span><span class="p">[</span><span class="n">optimized_columns_RFC</span><span class="p">],</span> <span class="n">income</span><span class="p">[</span><span class="n">target</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="n">kf</span><span class="p">,</span> <span class="p">)</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+    <span class="n">pred_proba</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">income</span><span class="p">[</span><span class="n">optimized_columns_RFC</span><span class="p">],</span> <span class="n">income</span><span class="p">[</span><span class="n">target</span><span class="p">],</span><span class="n">cv</span><span class="o">=</span><span class="n">kf</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;predict_proba&#39;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Results for {type(model).__name__}:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">income</span><span class="p">[</span><span class="n">target</span><span class="p">],</span><span class="n">predictions</span><span class="p">))</span>
+    <span class="n">cm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">income</span><span class="p">[</span><span class="n">target</span><span class="p">],</span><span class="n">predictions</span><span class="p">)</span>
+    <span class="n">myML_functions</span><span class="o">.</span><span class="n">print_cm</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Low Income&#39;</span><span class="p">,</span> <span class="s1">&#39;High Income&#39;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">ROC_AUC: {roc_auc_score(income[target], pred_proba[:,1]):0.3f}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> 
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;------------------------------------------------------</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Results for DecisionTreeClassifier:
+
+              precision    recall  f1-score   support
+
+           0       0.90      0.71      0.79     24720
+           1       0.45      0.75      0.56      7841
+
+   micro avg       0.72      0.72      0.72     32561
+   macro avg       0.67      0.73      0.68     32561
+weighted avg       0.79      0.72      0.74     32561
+
+    true / pred  Low Income High Income 
+     Low Income     17469.0      7251.0 
+    High Income      1938.0      5903.0 
+
+ROC_AUC: 0.793
+
+------------------------------------------------------
+
+
+Results for RandomForestClassifier:
+
+              precision    recall  f1-score   support
+
+           0       0.95      0.56      0.70     24720
+           1       0.39      0.90      0.55      7841
+
+   micro avg       0.64      0.64      0.64     32561
+   macro avg       0.67      0.73      0.62     32561
+weighted avg       0.81      0.64      0.66     32561
+
+    true / pred  Low Income High Income 
+     Low Income     13788.0     10932.0 
+    High Income       764.0      7077.0 
+
+ROC_AUC: 0.836
+
+------------------------------------------------------
+
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
 </div>
 </div>
 
