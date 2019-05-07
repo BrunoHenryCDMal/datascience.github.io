@@ -389,7 +389,7 @@ color: #52A6D8;
 }
 
 .middle_menu_img{
-	width:90px;
+	width:70px;
 	background-color:#25274D;	
 	padding:2px ;	
 	border-style:solid; 
@@ -469,7 +469,7 @@ color: #52A6D8;
   /*width:450px;*/  
   width:30%;  
   /*height:auto; */
-  height:360px;  
+  height:320px;  
   position:relative;
   
   text-align:center;
@@ -503,22 +503,22 @@ color: #52A6D8;
 
 @media only screen and (max-width:1640px) 
 {
- .middle_menu_projects { height:370px; } 
+ .middle_menu_projects { height:350px; } 
 }
 
 @media only screen and (max-width:1490px) 
 {
- .middle_menu_projects { height:390px; } 
+ .middle_menu_projects { height:370px; } 
 }
 
-@media only screen and (max-width:1090px) 
+@media only screen and (max-width:1120px) 
 {
- .middle_menu_projects { height:410px; } 
+ .middle_menu_projects { height:430px; } 
 }  
 
 @media only screen and (max-width:940px) 
 {
- .middle_menu_projects { height:490px; } 
+ .middle_menu_projects { height:450px; } 
 }  
   
 /* For mobile phones: */
@@ -527,7 +527,7 @@ color: #52A6D8;
   .middle_menu_projects 
   {
     width:98%;
-    height: 380px;
+    height: 340px;
     margin: 5px 1.667%;	
   }
 }  
